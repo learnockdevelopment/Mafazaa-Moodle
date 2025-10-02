@@ -401,6 +401,93 @@ ion-content.disable-scroll-y::part(scroll) {
     will-change: auto;
 }
 
+// Ensure buttons are fully scrollable and viewable
+ion-button {
+    min-height: 44px; // Ensure minimum touch target size
+    overflow: visible;
+    white-space: normal;
+    word-wrap: break-word;
+    line-height: 1.2;
+
+    // Ensure buttons are not cut off
+    &[expand="block"] {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    // Fix button text wrapping
+    ion-label {
+        white-space: normal;
+        word-wrap: break-word;
+        line-height: 1.2;
+    }
+}
+
+// Ensure ion-content allows proper scrolling for buttons
+ion-content {
+    --overflow: auto;
+
+    &::part(scroll) {
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-bottom: 20px; // Add bottom padding to ensure buttons are fully visible
+    }
+}
+
+// Fix infinite loading buttons
+core-infinite-loading {
+    ion-button {
+        margin: 8px 0;
+        min-height: 44px;
+    }
+}
+
+// Ensure FAB buttons are always visible
+ion-fab {
+    z-index: 999;
+
+    ion-fab-button {
+        min-height: 56px;
+        min-width: 56px;
+    }
+}
+
+// Fix footer buttons
+ion-footer {
+    ion-button {
+        min-height: 44px;
+        margin: 4px 0;
+    }
+}
+
+// Fix swiper container height restrictions in calendar context
+addon-calendar-calendar {
+    swiper-container {
+        height: auto !important;
+        max-height: none !important;
+        min-height: auto !important;
+
+        &::part(container) {
+            height: auto !important;
+            max-height: none !important;
+            overflow: visible !important;
+        }
+
+        &::part(wrapper) {
+            height: auto !important;
+            max-height: none !important;
+        }
+    }
+
+    swiper-slide {
+        height: auto !important;
+        max-height: none !important;
+        min-height: auto !important;
+        display: block !important;
+        overflow: visible !important;
+    }
+}
+
 @if ($core-login-hide-need-help) {
     .core-login-need-help {
         display: none !important;

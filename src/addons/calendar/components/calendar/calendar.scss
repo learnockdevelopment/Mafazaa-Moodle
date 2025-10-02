@@ -2,29 +2,136 @@
 
 :host {
     --addon-calendar-blank-day-background-color: var(--light);
+    display: block;
+    overflow: visible;
+    height: auto;
+    min-height: auto;
 
-    .core-swipe-slides-container ion-grid {
-        flex: none;
-        width: 100%;
+    .core-swipe-slides-container {
+        display: block;
+        height: auto;
+        min-height: auto;
+        max-height: none;
+        overflow: visible;
+
+        ion-grid {
+            flex: none;
+            width: 100%;
+            max-width: 100%;
+            overflow: visible;
+        }
+
+        core-swipe-slides {
+            display: block;
+            height: auto;
+            min-height: auto;
+            max-height: none;
+
+            swiper-container {
+                height: auto !important;
+                max-height: none !important;
+                min-height: auto !important;
+
+                &::part(container) {
+                    height: auto !important;
+                    max-height: none !important;
+                    overflow: visible !important;
+                }
+
+                &::part(wrapper) {
+                    height: auto !important;
+                    max-height: none !important;
+                }
+            }
+
+            swiper-slide {
+                height: auto !important;
+                max-height: none !important;
+                min-height: auto !important;
+                display: block !important;
+                overflow: visible !important;
+            }
+        }
+    }
+
+    /* Calendar Header Styles */
+    .calendar-header {
+        background: linear-gradient(135deg, $brand-color 0%, #5D2E0A 100%);
+        padding: 20px 16px;
+        margin-bottom: 16px;
+        border-radius: 0 0 24px 24px;
+        box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+    }
+
+    .calendar-title {
+        color: white;
+        font-size: 24px;
+        font-weight: 700;
+        margin: 0 0 8px 0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 1;
+    }
+
+    .calendar-subtitle {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 14px;
+        margin: 0;
+        font-weight: 400;
+        position: relative;
+        z-index: 1;
     }
 
     .addon-calendar-navigation {
         padding-top: 5px;
         padding-left: 10px;
         padding-right: 10px;
+        background: white;
+        border-radius: 16px;
+        margin: 0 16px 16px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.05);
     }
 
     .addon-calendar-months {
-        background-color: var(--contrast-background);
-        padding: 0;
+        background-color: white;
+        padding: 16px;
         font-size: var(--text-size);
+        border-radius: 16px;
+        margin: 0 8px 20px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        width: calc(100% - 16px);
+        max-width: none;
+        overflow: visible;
+        min-height: auto;
     }
 
     .addon-calendar-day {
-        border-bottom: 1px solid var(--addon-calendar-border-color);
-        @include border-end(1px, solid var(--addon-calendar-border-color));
-        overflow: hidden;
-        min-height: 60px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        @include border-end(1px, solid rgba(0, 0, 0, 0.1));
+        overflow: visible;
+        min-height: 100px;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        width: 100%;
+
+        &:hover {
+            background-color: rgba(102, 126, 234, 0.05);
+        }
 
         &:first-child {
             @include padding-horizontal(10px, null);
@@ -61,31 +168,65 @@
         }
 
         &.today .addon-calendar-day-number span {
-            border: 2px solid var(--addon-calendar-today-border-color);
-            line-height: 20px;
+            background: linear-gradient(135deg, $brand-color, #6B3410);
+            color: white;
+            border: none;
+            line-height: 24px;
             border-radius: 50%;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
         &.dayblank {
             cursor: auto;
-            background-color: var(--addon-calendar-blank-day-background-color);
+            background-color: #f8f9fa;
+            opacity: 0.6;
+        }
+        &.hasevents {
+            background-color: rgba(102, 126, 234, 0.05);
+            border-left: 3px solid $brand-color;
+        }
+        &.weekend {
+            background-color: rgba(102, 126, 234, 0.02);
         }
 
-        .addon-calendar-event {
-            margin-top: 0.6em;
-            margin-bottom: 0.6em;
-            overflow: hidden;
-            white-space: nowrap;
-            color: var(--text-color);
-            min-height: auto;
+    .addon-calendar-event {
+        margin-top: 0.3em;
+        margin-bottom: 0.3em;
+        overflow: hidden;
+        white-space: nowrap;
+        color: var(--text-color);
+        min-height: auto;
+        padding: 3px 6px;
+        border-radius: 6px;
+        background: rgba(139, 69, 19, 0.1);
+        border: 1px solid rgba(139, 69, 19, 0.2);
+        transition: all 0.2s ease;
+        font-size: 11px;
 
-            &.addon-calendar-event-past {
-                opacity: 0.5;
-            }
-
-            .addon-calendar-event-name {
-                font-weight: 500;
-            }
+        &:hover {
+            background: rgba(139, 69, 19, 0.15);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(139, 69, 19, 0.2);
         }
+
+        &.addon-calendar-event-past {
+            opacity: 0.5;
+            background: rgba(108, 117, 125, 0.1);
+            border-color: rgba(108, 117, 125, 0.2);
+        }
+
+        .addon-calendar-event-name {
+            font-weight: 500;
+            color: #333;
+            font-size: 10px;
+        }
+
+        .addon-calendar-event-time {
+            font-size: 9px;
+            color: $brand-color;
+            font-weight: 600;
+        }
+    }
 
         .addon-calendar-day-more {
             @include margin(0.6em, null, 0.6em, 4px);
@@ -109,12 +250,19 @@
     }
 
     .addon-calendar-weekday {
-        border-bottom: 1px solid var(--addon-calendar-border-color);
-        font-weight: bold;
+        border-bottom: 2px solid $brand-color;
+        font-weight: 700;
+        color: $brand-color;
+        background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+        padding: 12px 8px;
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 0.5px;
     }
 
     .addon-calendar-day-events {
         text-align: start;
+        margin-top: 4px;
 
         ion-icon {
             @include margin-horizontal(null, 2px);
@@ -147,9 +295,163 @@
         justify-content: start;
         align-items: start;
         text-align: start;
+        width: 100%;
+    }
+
+    /* Ensure calendar grid takes full width */
+    ion-grid {
+        --ion-grid-padding: 0;
+        --ion-grid-column-padding: 0;
+        overflow: visible;
+    }
+
+    ion-col {
+        padding: 0;
+        width: 100%;
+        overflow: visible;
+    }
+
+    /* Ensure core-loading doesn't interfere with scrolling */
+    core-loading {
+        display: block;
+        overflow: visible;
+        height: auto;
+        min-height: auto;
     }
 }
 
 :host-context(:root.dark) {
     --addon-calendar-blank-day-background-color: var(--gray-900);
+}
+
+/* RTL Support */
+[dir="rtl"] {
+    .calendar-title {
+        text-align: right;
+    }
+
+    .calendar-subtitle {
+        text-align: right;
+    }
+
+    .addon-calendar-day {
+        &.hasevents {
+            border-left: none;
+            border-right: 3px solid $brand-color;
+        }
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .calendar-header {
+        padding: 16px;
+        margin-bottom: 12px;
+    }
+
+    .calendar-title {
+        font-size: 20px;
+    }
+
+    .calendar-subtitle {
+        font-size: 13px;
+    }
+
+    .addon-calendar-navigation {
+        margin: 0 12px 12px;
+        padding: 8px;
+    }
+
+    .addon-calendar-months {
+        margin: 0 6px 16px;
+        padding: 12px;
+        width: calc(100% - 12px);
+    }
+
+    .addon-calendar-day {
+        min-height: 120px;
+    }
+
+    .addon-calendar-day-events {
+        margin-top: 2px;
+    }
+
+    .addon-calendar-event {
+        margin-top: 0.2em;
+        margin-bottom: 0.2em;
+        padding: 2px 4px;
+        font-size: 10px;
+
+        .addon-calendar-event-name {
+            font-size: 9px;
+        }
+
+        .addon-calendar-event-time {
+            font-size: 8px;
+        }
+    }
+
+    .addon-calendar-weekday {
+        padding: 8px 4px;
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar-header {
+        padding: 12px;
+        border-radius: 0 0 16px 16px;
+    }
+
+    .calendar-title {
+        font-size: 18px;
+    }
+
+    .calendar-subtitle {
+        font-size: 12px;
+    }
+
+    .addon-calendar-navigation {
+        margin: 0 8px 8px;
+        padding: 6px;
+    }
+
+    .addon-calendar-months {
+        margin: 0 4px 12px;
+        padding: 8px;
+        width: calc(100% - 8px);
+    }
+
+    .addon-calendar-day {
+        min-height: 100px;
+    }
+
+    .addon-calendar-day-events {
+        margin-top: 1px;
+    }
+
+    .addon-calendar-event {
+        margin-top: 0.1em;
+        margin-bottom: 0.1em;
+        padding: 1px 3px;
+        font-size: 9px;
+
+        .addon-calendar-event-name {
+            font-size: 8px;
+        }
+
+        .addon-calendar-event-time {
+            font-size: 7px;
+        }
+    }
+
+    .addon-calendar-weekday {
+        padding: 6px 2px;
+        font-size: 10px;
+    }
+
+    .addon-calendar-event {
+        padding: 2px 4px;
+        font-size: 11px;
+    }
 }

@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { AfterViewInit, Component, OnInit, viewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, viewChild, inject } from '@angular/core';
 import { IonRouterOutlet, IonicModule } from '@ionic/angular';
 import { BackButtonEvent } from '@ionic/core';
+import { TranslateService } from '@ngx-translate/core';
 
 import { CoreLoginHelper } from '@features/login/services/login-helper';
 import { SplashScreen } from '@singletons';
@@ -29,6 +30,8 @@ import { register } from 'swiper/element/bundle';
 import { CoreWait } from '@singletons/wait';
 import { CoreOpener } from '@singletons/opener';
 import { BackButtonPriority } from '@/core/constants';
+import { CoreLang } from '@services/lang';
+import { CoreEvents } from '@singletons/events';
 
 register();
 
@@ -42,11 +45,36 @@ export class AppComponent implements OnInit, AfterViewInit {
     readonly outlet = viewChild.required(IonRouterOutlet);
 
     protected logger = CoreLogger.getInstance('AppComponent');
+    currentLang = 'ar';
+
+    private translate = inject(TranslateService);
+
+    constructor() {
+        // Language detection moved to ngOnInit
+    }
 
     /**
      * @inheritdoc
      */
-    ngOnInit(): void {
+    async ngOnInit(): Promise<void> {
+        // Detect language and set direction first
+        await this.detectAndSetLanguage();
+
+        // Also set direction after a short delay to ensure DOM is ready
+        setTimeout(async () => {
+            await this.detectAndSetLanguage();
+        }, 100);
+
+        // Force RTL after DOM is ready
+        setTimeout(() => {
+            this.forceRTL();
+        }, 500);
+
+        // Periodic language change detection
+        setInterval(() => {
+            this.loadCurrentLanguage();
+        }, 2000);
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const win = <any> window;
 
@@ -167,6 +195,127 @@ export class AppComponent implements OnInit, AfterViewInit {
         }, 1000);
 
         return promise;
+    }
+
+    /**
+     * Detect language and set appropriate direction
+     */
+    private async detectAndSetLanguage(): Promise<void> {
+        try {
+            // Get current language from CoreLang
+            const detectedLang = await CoreLang.getCurrentLanguage();
+            this.currentLang = detectedLang || 'ar'; // Default to Arabic if undefined
+
+            this.logger.debug(`Detected language: ${this.currentLang}`);
+
+            // Set the language
+            this.translate.setDefaultLang('ar'); // Always default to Arabic
+            this.translate.use(this.currentLang);
+
+            // Set direction based on language
+            this.setLanguageDirection(this.currentLang);
+
+            // Listen for language changes
+            CoreEvents.on(CoreEvents.LANGUAGE_CHANGED, () => {
+                this.loadCurrentLanguage();
+            });
+
+        } catch (error) {
+            this.logger.warn('Failed to detect language, using Arabic as default:', error);
+            this.currentLang = 'ar';
+            this.translate.setDefaultLang('ar');
+            this.translate.use('ar');
+            this.setLanguageDirection('ar');
+        }
+    }
+
+    /**
+     * Load current language
+     */
+    private async loadCurrentLanguage(): Promise<void> {
+        try {
+            const newLang = await CoreLang.getCurrentLanguage();
+            if (newLang !== this.currentLang) {
+                this.logger.debug(`Language changed from ${this.currentLang} to ${newLang}`);
+                this.currentLang = newLang || 'ar';
+                this.setLanguageDirection(this.currentLang);
+
+                // Force update all components
+                CoreEvents.trigger(CoreEvents.LANGUAGE_CHANGED, {
+                    newLang: this.currentLang,
+                    oldLang: this.currentLang
+                });
+            }
+        } catch (error) {
+            this.logger.warn('Failed to load current language:', error);
+            this.currentLang = 'ar';
+            this.setLanguageDirection('ar');
+        }
+    }
+
+    /**
+     * Set language direction based on language code
+     *
+     * @param lang Language code
+     */
+    private setLanguageDirection(lang: string): void {
+        const htmlElement = document.documentElement;
+
+        this.logger.debug(`Setting direction for language: ${lang}`);
+
+        // Simple language detection: Arabic = RTL, English = LTR
+        if (lang === 'ar') {
+            // Arabic = RTL
+            htmlElement.setAttribute('dir', 'rtl');
+            htmlElement.setAttribute('lang', 'ar');
+            document.body.classList.remove('ltr');
+            document.body.classList.add('rtl');
+            document.body.setAttribute('dir', 'rtl');
+            this.logger.debug('RTL layout set for Arabic');
+        } else if (lang === 'en') {
+            // English = LTR
+            htmlElement.setAttribute('dir', 'ltr');
+            htmlElement.setAttribute('lang', 'en');
+            document.body.classList.remove('rtl');
+            document.body.classList.add('ltr');
+            document.body.setAttribute('dir', 'ltr');
+            this.logger.debug('LTR layout set for English');
+        } else {
+            // Default to Arabic RTL
+            htmlElement.setAttribute('dir', 'rtl');
+            htmlElement.setAttribute('lang', 'ar');
+            document.body.classList.remove('ltr');
+            document.body.classList.add('rtl');
+            document.body.setAttribute('dir', 'rtl');
+            this.logger.debug('Default RTL layout set');
+        }
+
+        // Force a reflow to ensure changes take effect
+        htmlElement.offsetHeight;
+    }
+
+    /**
+     * Force RTL layout immediately
+     */
+    private forceRTL(): void {
+        const htmlElement = document.documentElement;
+        const bodyElement = document.body;
+
+        // Force RTL attributes
+        htmlElement.setAttribute('dir', 'rtl');
+        htmlElement.setAttribute('lang', 'ar');
+
+        // Force body classes
+        bodyElement.classList.remove('ltr');
+        bodyElement.classList.add('rtl');
+        bodyElement.setAttribute('dir', 'rtl');
+
+        // Force CSS direction
+        htmlElement.style.direction = 'rtl';
+        bodyElement.style.direction = 'rtl';
+        bodyElement.style.textAlign = 'right';
+
+        this.logger.debug('RTL forced immediately');
     }
 
 }

@@ -1,57 +1,143 @@
 <ion-header>
     <ion-toolbar>
-        <ion-buttons slot="start">
-            <ion-back-button [text]="'core.back' | translate" />
-        </ion-buttons>
         <ion-title>
-            <h1>
-                <core-site-logo logoType="top" />
-            </h1>
+            <h1>{{ 'core.courses.mycourses' | translate }}</h1>
         </ion-title>
         <ion-buttons slot="end">
             <core-user-menu-button />
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
-<ion-content>
+
+<ion-content class="home-content" [dir]="currentLang === 'ar' ? 'rtl' : 'ltr'" [attr.data-lang]="currentLang">
     <ion-refresher slot="fixed" [disabled]="!loaded" (ionRefresh)="refresh($event.target)">
         <ion-refresher-content pullingText="{{ 'core.pulltorefresh' | translate }}" />
     </ion-refresher>
+
     <core-loading [hideUntil]="loaded">
-        <ion-item class="ion-text-wrap divider">
-            <ion-label>
-                <h2 class="big" id="core-courses-my-title">{{ 'core.courses.mycourses' | translate }}</h2>
-            </ion-label>
-            <div slot="end" class="flex-row">
-                <!-- Download all courses. -->
-                @if (downloadCoursesEnabled && myOverviewBlock && myOverviewBlock.filteredCourses.length > 0) {
-                    <div class="core-button-spinner">
-                        @if (!myOverviewBlock.prefetchCoursesData.loading) {
-                            <ion-button fill="clear" size="default" (click)="myOverviewBlock.prefetchCourses()"
-                                [attr.aria-label]="myOverviewBlock.prefetchCoursesData.statusTranslatable | translate">
-                                <ion-icon [name]="myOverviewBlock.prefetchCoursesData.icon" slot="icon-only" aria-hidden="true" />
+
+        <!-- Text Banner -->
+        <div class="text-banner">
+            <div class="banner-content">
+                <div class="welcome-text">
+                    <h1 class="welcome-title">{{ 'core.home.welcome_title' | translate }}</h1>
+                    <p class="welcome-subtitle">{{ 'core.home.welcome_subtitle' | translate }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="search-section">
+            <div class="search-container">
+                <ion-input
+                    type="text"
+                    [placeholder]="'core.home.search_placeholder' | translate"
+                    class="search-input"
+                    (ionInput)="onSearch($event)">
+                    <ion-icon name="search-outline" slot="start" class="search-icon"></ion-icon>
+                </ion-input>
+            </div>
+        </div>
+
+        <!-- Filter Dropdowns Row -->
+        <div class="filters-section">
+            <div class="filter-dropdowns">
+                <!-- Type Filter Dropdown -->
+                <ion-select
+                    class="filter-dropdown"
+                    [value]="selectedStatus"
+                    (ionChange)="filterByStatus($event.detail.value)"
+                    placeholder="{{ 'core.home.select_type' | translate }}">
+                    <ion-select-option value="all">{{ 'core.home.all_courses' | translate }}</ion-select-option>
+                    <ion-select-option value="upcoming">{{ 'core.home.upcoming' | translate }}</ion-select-option>
+                    <ion-select-option value="popular">{{ 'core.home.popular' | translate }}</ion-select-option>
+                    <ion-select-option value="ended">{{ 'core.home.ended' | translate }}</ion-select-option>
+                </ion-select>
+
+                <!-- Category Filter Dropdown -->
+                <ion-select
+                    class="filter-dropdown"
+                    [value]="selectedCategory"
+                    (ionChange)="filterByCategory($event.detail.value)"
+                    placeholder="{{ 'core.home.select_category' | translate }}">
+                    <ion-select-option value="all">{{ 'core.home.all_levels' | translate }}</ion-select-option>
+                    @for (category of availableCategories; track category.id) {
+                        <ion-select-option [value]="category.id.toString()">{{ category.name }}</ion-select-option>
+                    }
+                </ion-select>
+            </div>
+        </div>
+
+        <!-- Course Section Header -->
+        <div class="section-header">
+            <h3 class="section-title" style="text-align: right !important; direction: rtl !important;">{{ getCategoryTitle() | translate }}</h3>
+        </div>
+
+        <!-- Vertical Course Cards -->
+        <div class="courses-container">
+            @if (coursesLoaded && courses.length > 0) {
+                @for (course of courses; track course.id) {
+                    <div class="course-card" (click)="openCourse(course)">
+                        <!-- Course Image -->
+                        <div class="course-image">
+                            <core-course-image [course]="course" class="card-top" />
+                        </div>
+
+                        <!-- Course Content -->
+                        <div class="course-content">
+                            <h3 class="course-title">{{ course.fullname }}</h3>
+
+                            @if (getCourseInstructor(course)) {
+                                <div class="course-instructor">
+                                    <ion-icon name="person-outline" class="info-icon"></ion-icon>
+                                    <span class="instructor-name">{{ getCourseInstructor(course) }}</span>
+                                </div>
+                            }
+
+                            <div class="course-duration">
+                                <ion-icon name="time-outline" class="info-icon"></ion-icon>
+                                <span class="duration-text">{{ getCourseDuration(course) }}</span>
+                            </div>
+
+                            <div class="course-rating">
+                                <div class="stars">
+                                    @for (star of getCourseRating(course); track $index) {
+                                        <ion-icon
+                                            [name]="star === 1 ? 'star' : 'star-outline'"
+                                            class="star-icon"
+                                            [class.filled]="star === 1">
+                                        </ion-icon>
+                                    }
+                                </div>
+                            </div>
+
+                            <ion-button fill="solid" class="view-details-btn">
+                                {{ 'core.course.viewdetails' | translate }}
                             </ion-button>
-                        }
-                        @if (myOverviewBlock.prefetchCoursesData.badge) {
-                            <ion-badge class="core-course-download-courses-progress" role="progressbar"
-                                [attr.aria-valuemax]="myOverviewBlock.prefetchCoursesData.total"
-                                [attr.aria-valuenow]="myOverviewBlock.prefetchCoursesData.count"
-                                [attr.aria-valuetext]="myOverviewBlock.prefetchCoursesData.badgeA11yText">
-                                {{myOverviewBlock.prefetchCoursesData.badge}}
-                            </ion-badge>
-                        }
-                        @if (myOverviewBlock.prefetchCoursesData.loading) {
-                            <ion-spinner [attr.aria-label]="'core.loading' | translate" />
-                        }
+                        </div>
                     </div>
                 }
-            </div>
-        </ion-item>
-        <ion-list>
-            @if (loadedBlock?.visible) {
-                <core-block [block]="loadedBlock" contextLevel="user" [instanceId]="userId" labelledBy="core-courses-my-title" />
+            } @else if (coursesLoaded && courses.length === 0) {
+                <div class="no-courses">
+                    <img src="assets/img/nocourses.png" alt="No Courses" class="no-courses-image">
+                    <p class="no-courses-text">{{ 'core.courses.nocourses' | translate }}</p>
+                </div>
+            } @else {
+                <div class="courses-loading">
+                    @for (i of [1,2,3]; track i) {
+                        <div class="course-card-skeleton">
+                            <div class="skeleton-image"></div>
+                            <div class="skeleton-content">
+                                <div class="skeleton-title"></div>
+                                <div class="skeleton-line"></div>
+                                <div class="skeleton-line"></div>
+                                <div class="skeleton-button"></div>
+                            </div>
+                        </div>
+                    }
+                </div>
             }
-        </ion-list>
+        </div>
 
         @if (hasSideBlocks) {
             <core-block-side-blocks-button slot="fixed" contextLevel="user" [instanceId]="userId" [myDashboardPage]="myPageCourses" />

@@ -3,5 +3,15 @@
     "logout": "Log out",
     "switchaccount": "Switch account",
     "usermenutourdescription": "The place to check your grades, change your preferences or switch accounts.",
-    "usermenutourtitle": "Explore your personal area"
+    "usermenutourtitle": "Explore your personal area",
+    "core.mainmenu.home": "الرئيسية",
+    "core.mainmenu.courses": "الدورات",
+    "core.mainmenu.calendar": "التقويم",
+    "core.mainmenu.notifications": "الإشعارات",
+    "core.mainmenu.messages": "الرسائل",
+    "core.mainmenu.grades": "الدرجات",
+    "core.mainmenu.settings": "الإعدادات",
+    "core.mainmenu.help": "المساعدة",
+    "core.mainmenu.logout": "تسجيل الخروج",
+    "core.mainmenu.switchaccount": "تبديل الحساب"
 }

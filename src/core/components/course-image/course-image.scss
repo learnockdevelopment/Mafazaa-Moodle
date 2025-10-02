@@ -127,3 +127,18 @@
 :host-context(ion-item) {
     @include margin(6px, 8px, 6px, 0px);
 }
+
+/* RTL Support */
+[dir="rtl"] :host {
+    ion-avatar {
+        margin-right: 0;
+        margin-left: 8px;
+    }
+}
+
+[dir="ltr"] :host {
+    ion-avatar {
+        margin-right: 8px;
+        margin-left: 0;
+    }
+}

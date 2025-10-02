@@ -1,11 +1,9 @@
-<ion-tabs #mainTabs [hidden]="!showTabs" [class]="'placement-' + tabsPlacement"
-    [class.tabshidden]="!isMainScreen && tabsPlacement === 'bottom'" (ionTabsDidChange)="tabChanged($event)">
-    <ion-tab-bar [slot]="tabsPlacement === 'side' ? 'top' : 'bottom'" class="mainmenu-tabs" [@menuVisibilityAnimation]="visibility">
-        <core-loading [hideUntil]="loaded" [placeholderType]="tabsPlacement === 'bottom' ? 'rowwrap' : 'column'"
+    <ion-tabs #mainTabs [hidden]="!showTabs" [class]="'placement-' + tabsPlacement"
+    [class.tabshidden]="!isMainScreen && tabsPlacement === 'bottom'"
+    (ionTabsDidChange)="tabChanged($event)">
+    <ion-tab-bar slot="bottom" class="mainmenu-tabs" [@menuVisibilityAnimation]="visibility">
+        <core-loading [hideUntil]="loaded" [placeholderType]="'rowwrap'"
             [placeholderLimit]="loadingTabsLength" />
-        @if (loaded && tabsPlacement === 'side') {
-            <core-user-menu-button [alwaysShow]="true" />
-        }
 
         <ion-tab-button *ngFor="let tab of tabs" (keydown)="tabAction.keyDown(tab.page, $event)" (keyup)="tabAction.keyUp(tab.page, $event)"
             [hidden]="!loaded && tab.hide" [tab]="tab.page" [disabled]="tab.hide" layout="label-hide" class="{{tab.class}}"
@@ -23,18 +21,17 @@
             }
         </ion-tab-button>
 
-        <ion-tab-button (keydown)="tabAction.keyDown(morePageName, $event)" (keyup)="tabAction.keyUp(morePageName, $event)"
-            [hidden]="!loaded" [tab]="morePageName" layout="label-hide" [tabindex]="selectedTab === morePageName ? 0 : -1"
-            [attr.aria-controls]="morePageName">
-            <ion-icon class="core-tab-icon" name="ellipsis-horizontal" aria-hidden="true" />
-            <ion-label aria-hidden="true">{{ 'core.more' | translate }}</ion-label>
-            <span class="sr-only">{{ 'core.more' | translate }}</span>
-            @if (moreBadge) {
-                <ion-icon class="core-tab-badge" name="fas-circle" aria-hidden="true" />
-            }
+        <ion-tab-button (keydown)="tabAction.keyDown('settings', $event)" (keyup)="tabAction.keyUp('settings', $event)"
+            [hidden]="!loaded" [tab]="'settings'" layout="label-hide" [tabindex]="selectedTab === 'settings' ? 0 : -1"
+            [attr.aria-controls]="'settings'">
+            <ion-icon class="core-tab-icon" name="settings" aria-hidden="true" />
+            <ion-label aria-hidden="true">{{ 'core.settings.appsettings' | translate }}</ion-label>
+            <span class="sr-only">{{ 'core.settings.appsettings' | translate }}</span>
         </ion-tab-button>
     </ion-tab-bar>
 </ion-tabs>
+
+
 <div class="core-network-message" [hidden]="!showTabs">
     <div class="core-online-message">
         {{ "core.youreonline" | translate }}

@@ -77,7 +77,7 @@ export class AddonModAssignEditFeedbackModalComponent implements OnDestroy, OnIn
         modified: 0,
         addAttempt : false,
         applyToAll: false,
-        lang: 'en',
+        lang: 'ar',
         disabled: false,
     }; // Data about the grade.
 

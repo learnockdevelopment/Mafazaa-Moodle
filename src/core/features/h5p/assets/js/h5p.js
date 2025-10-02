@@ -403,7 +403,7 @@ H5P.init = function (target) {
     const contentId = $iframe.data('content-id');
     const contentData = H5PIntegration.contents['cid-' + contentId];
     const contentLanguage = contentData && contentData.metadata && contentData.metadata.defaultLanguage
-      ? contentData.metadata.defaultLanguage : 'en';
+      ? contentData.metadata.defaultLanguage : 'ar';
 
     const writeDocument = function () {
       iframe.contentDocument.open();

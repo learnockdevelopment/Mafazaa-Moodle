@@ -1,0 +1,406 @@
+@use "theme/globals" as *;
+
+:host ::ng-deep ion-item-divider {
+    display: none !important;
+}
+
+:host ::ng-deep core-loading {
+    --internal-loading-inline-min-height: calc(100vh - var(--core-header-toolbar-height));
+}
+
+:host-context(ion-tabs.placement-bottom) ::ng-deep core-loading {
+    --internal-loading-inline-min-height: calc(100vh - var(--core-header-toolbar-height) - var(--bottom-tabs-size) - 2px);
+}
+
+/* Dashboard Header Styles */
+.dashboard-header {
+    background: linear-gradient(135deg, $brand-color 0%, #5D2E0A 100%);
+    padding: 24px 16px;
+    margin-bottom: 20px;
+    border-radius: 0 0 24px 24px;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        opacity: 0.3;
+    }
+}
+
+.dashboard-content {
+    position: relative;
+    z-index: 1;
+}
+
+.dashboard-title {
+    color: white;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 16px;
+    margin: 0;
+    font-weight: 400;
+}
+
+.dashboard-stats {
+    display: flex;
+    gap: 16px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 16px;
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+}
+
+.stat-number {
+    color: white;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.stat-label {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    margin: 0;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Dashboard Content */
+.dashboard-content-section {
+    padding: 0 16px 20px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding: 0 4px;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+    text-align: right !important;
+    direction: rtl !important;
+}
+
+.view-all-btn {
+    --color: $brand-color;
+    --background: transparent;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: none;
+    --padding-start: 8px;
+    --padding-end: 8px;
+    --padding-top: 4px;
+    --padding-bottom: 4px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+
+    &:hover {
+        --background: rgba(102, 126, 234, 0.1);
+    }
+}
+
+/* Dashboard Cards */
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.dashboard-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, $brand-color, #6B3410);
+    }
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    }
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, $brand-color, #6B3410);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    color: white;
+    font-size: 18px;
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+    flex: 1;
+}
+
+.card-content {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Quick Actions */
+.quick-actions {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.quick-action-btn {
+    --background: white;
+    --color: $brand-color;
+    --border-radius: 12px;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    font-weight: 500;
+    transition: all 0.2s ease;
+    flex: 1;
+    min-width: 120px;
+
+    &:hover {
+        --background: $brand-color;
+        --color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+}
+
+/* Blocks Styling */
+:host ::ng-deep ion-list.list-item-limited-width {
+    background: transparent;
+    padding: 0;
+}
+
+:host ::ng-deep core-block {
+    margin-bottom: 16px;
+}
+
+:host ::ng-deep core-block ion-card {
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    margin: 0 0 16px 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    }
+}
+
+:host ::ng-deep core-block ion-card-header {
+    background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+    border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+    padding: 16px 20px;
+}
+
+:host ::ng-deep core-block ion-card-title {
+    color: #333;
+    font-weight: 600;
+    font-size: 16px;
+    margin: 0;
+}
+
+:host ::ng-deep core-block ion-card-content {
+    padding: 20px;
+}
+
+/* Empty State */
+:host ::ng-deep core-empty-box {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+:host ::ng-deep core-empty-box ion-icon {
+    font-size: 64px;
+    color: #ccc;
+    margin-bottom: 16px;
+}
+
+:host ::ng-deep core-empty-box ion-label {
+    color: #666;
+    font-size: 16px;
+}
+
+/* RTL Support */
+[dir="rtl"] {
+    .section-title {
+        text-align: right !important;
+        direction: rtl !important;
+    }
+
+    .section-header {
+        flex-direction: row-reverse;
+    }
+
+    .card-icon {
+        margin-right: 0;
+        margin-left: 12px;
+    }
+
+    .dashboard-stats {
+        flex-direction: row-reverse;
+    }
+
+    .quick-actions {
+        flex-direction: row-reverse;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-header {
+        padding: 20px 16px;
+        margin-bottom: 16px;
+    }
+
+    .dashboard-title {
+        font-size: 24px;
+    }
+
+    .dashboard-stats {
+        gap: 12px;
+    }
+
+    .stat-card {
+        padding: 12px;
+        min-width: 100px;
+    }
+
+    .stat-number {
+        font-size: 20px;
+    }
+
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .dashboard-card {
+        padding: 16px;
+    }
+
+    .quick-actions {
+        gap: 8px;
+    }
+
+    .quick-action-btn {
+        min-width: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-header {
+        padding: 16px;
+        border-radius: 0 0 16px 16px;
+    }
+
+    .dashboard-title {
+        font-size: 22px;
+    }
+
+    .dashboard-subtitle {
+        font-size: 14px;
+    }
+
+    .dashboard-stats {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .stat-card {
+        min-width: auto;
+    }
+
+    .section-title {
+        font-size: 18px;
+    }
+
+    .dashboard-card {
+        padding: 12px;
+    }
+
+    .card-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+
+    .card-title {
+        font-size: 15px;
+    }
+
+    .card-content {
+        font-size: 13px;
+    }
+}

@@ -24,6 +24,8 @@ import { CoreMainMenuUserMenuTourComponent } from '../user-menu-tour/user-menu-t
 import CoreMainMenuPage from '@features/mainmenu/pages/menu/menu';
 import { toBoolean } from '@/core/transforms/boolean';
 import { CoreSharedModule } from '@/core/shared.module';
+import { CoreLang } from '@services/lang';
+import { CoreEvents } from '@singletons/events';
 
 /**
  * Component to display an avatar on the header to open user menu.
@@ -44,6 +46,7 @@ export class CoreMainMenuUserButtonComponent implements OnInit {
 
     siteInfo?: CoreSiteInfo;
     isMainScreen = false;
+    currentLang = 'ar';
     userTour: CoreUserTourDirectiveOptions = {
         id: 'user-menu',
         component: CoreMainMenuUserMenuTourComponent,
@@ -63,6 +66,14 @@ export class CoreMainMenuUserButtonComponent implements OnInit {
      */
     ngOnInit(): void {
         this.isMainScreen = !this.routerOutlet.canGoBack();
+
+        // Load current language
+        this.loadCurrentLanguage();
+
+        // Listen for language changes
+        CoreEvents.on(CoreEvents.LANGUAGE_CHANGED, () => {
+            this.loadCurrentLanguage();
+        });
     }
 
     /**
@@ -79,6 +90,18 @@ export class CoreMainMenuUserButtonComponent implements OnInit {
         CoreModals.openSideModal<void>({
             component: CoreMainMenuUserMenuComponent,
         });
+    }
+
+    /**
+     * Load current language
+     */
+    private async loadCurrentLanguage(): Promise<void> {
+        try {
+            this.currentLang = await CoreLang.getCurrentLanguage();
+        } catch (error) {
+            console.warn('Failed to load current language:', error);
+            this.currentLang = 'ar';
+        }
     }
 
 }

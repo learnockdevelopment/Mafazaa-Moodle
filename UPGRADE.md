@@ -1,4 +1,4 @@
-This file describes API changes in the Moodle App that affect site plugins, information provided here is intended especially for developers.
+This file describes API changes in the Mafaza that affect site plugins, information provided here is intended especially for developers.
 
 For more information about upgrading, read the official documentation: https://moodledev.io/general/app/upgrading/
 

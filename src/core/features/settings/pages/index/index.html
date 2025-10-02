@@ -1,24 +1,30 @@
-<ion-header>
+<ion-header [dir]="currentLang === 'ar' ? 'rtl' : 'ltr'">
     <ion-toolbar>
         <ion-buttons slot="start">
             <ion-back-button [text]="'core.back' | translate" />
         </ion-buttons>
-        <ion-title>
-            <h1>{{ 'core.settings.appsettings' | translate }}</h1>
-        </ion-title>
         <ion-buttons slot="end" />
     </ion-toolbar>
 </ion-header>
-<ion-content>
+
+<ion-content [dir]="currentLang === 'ar' ? 'rtl' : 'ltr'" class="settings-content">
+
     <core-split-view>
-        <ion-list>
-            <ion-item *ngFor="let section of sections.items" [attr.aria-current]="sections.getItemAriaCurrent(section)" button
-                [detail]="true" (click)="sections.select(section)">
-                <ion-icon [name]="section.icon" slot="start" aria-hidden="true" />
-                <ion-label class="ion-text-wrap">
-                    <p class="item-heading">{{ section.name | translate }}</p>
-                </ion-label>
-            </ion-item>
-        </ion-list>
+        <div class="settings-sections">
+            <ion-list class="settings-list">
+                <ion-item *ngFor="let section of sections.items" [attr.aria-current]="sections.getItemAriaCurrent(section)"
+                    button [detail]="true" (click)="sections.select(section)" class="settings-item">
+                    <div class="settings-item-content">
+                        <div class="settings-item-icon">
+                            <ion-icon [name]="section.icon" aria-hidden="true" />
+                        </div>
+                        <div class="settings-item-text">
+                            <h3 class="settings-item-title">{{ section.name | translate }}</h3>
+                            <p class="settings-item-description">{{ getSectionDescription(section) | translate }}</p>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-list>
+        </div>
     </core-split-view>
 </ion-content>

@@ -34,7 +34,7 @@ Feature: Test showloginform setting in the app
     And I press "Connect to your site" in the app
     And I press "App settings" in the app
     And I press "About" in the app
-    And I press "Moodle Mobile" in the app
+    And I press "Mafaza" in the app
     And I press "Developer options" in the app
     And I press "Always show login form" in the app
     And I go back 4 times in the app
@@ -46,7 +46,7 @@ Feature: Test showloginform setting in the app
     And I log out in the app
     And I press "App settings" in the app
     And I press "About" in the app
-    And I press "Moodle Mobile" in the app
+    And I press "Mafaza" in the app
     And I press "Developer options" in the app
     And I press "Always show login form" in the app
     And I go back to the root page in the app

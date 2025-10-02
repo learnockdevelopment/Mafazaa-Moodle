@@ -1,23 +1,24 @@
 @if ((showLoginForm || isBrowserSSO) && (loginMethods.length || identityProviders.length || showScanQR)) {
-    <div class="ion-text-center ion-padding core-login-methods-separator">
-        <span>{{ 'core.login.or' | translate }}</span>
+    <div class="social-login-separator">
+        <div class="separator-line"></div>
+        <span class="separator-text">{{ 'core.login.or' | translate }}</span>
+        <div class="separator-line"></div>
     </div>
 }
 
 @if (loginMethods.length) {
-    <div class="core-login-methods">
-        <ion-button [fill]="'outline'" class="ion-text-wrap ion-margin ion-no-margin-horizontal" *ngFor="let method of loginMethods"
-            (click)="method.action()" [ariaLabel]="method.name" expand="block">
+    <div class="social-login-buttons">
+        <ion-button [fill]="'outline'" class="social-button" *ngFor="let method of loginMethods"
+            (click)="method.action()" [ariaLabel]="method.name">
             @if (method.icon) {
-                <ion-icon [name]="method.icon" slot="start" />
+                <ion-icon [name]="method.icon" />
             }
-            <ion-label>{{ method.name }}</ion-label>
         </ion-button>
     </div>
 }
 
 @if (showScanQR) {
-    <ion-button expand="block" fill="outline" class="ion-margin core-login-site-qrcode ion-no-margin-horizontal"
+    <ion-button expand="block" fill="outline" class="social-button qr-button"
         (click)="showInstructionsAndScanQR()">
         <ion-icon slot="start" name="fas-qrcode" aria-hidden="true" />
         {{ 'core.scanqr' | translate }}
@@ -26,9 +27,8 @@
 
 <!-- Identity providers. -->
 @if (identityProviders.length) {
-    <ion-list class="core-login-identity-providers">
-        <h2 class="item-heading">{{ 'core.login.potentialidps' | translate }}</h2>
+    <div class="social-login-buttons">
         <core-identity-provider *ngFor="let provider of identityProviders" [provider]="provider" [launchurl]="siteConfig?.launchurl"
             [redirectData]="redirectData" [siteUrl]="siteUrl" />
-    </ion-list>
+    </div>
 }

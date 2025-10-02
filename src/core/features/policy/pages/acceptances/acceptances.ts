@@ -251,7 +251,7 @@ export default class CorePolicyAcceptancesPage implements OnInit, OnDestroy {
             // Error updating the acceptance, calculate it in the app.
             policy.acceptance = {
                 status: accepted ? 1 : 0,
-                lang: policy.acceptance?.lang ?? 'en',
+                lang: policy.acceptance?.lang ?? 'ar',
                 timemodified: Date.now(),
                 usermodified: CoreSites.getCurrentSiteUserId(),
             };

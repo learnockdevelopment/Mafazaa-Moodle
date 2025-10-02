@@ -1,6 +1,317 @@
+@use "theme/globals" as *;
+
 :host {
     .addon-mod_chat-notice {
         margin-top: 8px;
         margin-bottom: 8px;
+    }
+}
+
+/* Chat Header Styles */
+.chat-header {
+    background: linear-gradient(135deg, $brand-color 0%, #5D2E0A 100%);
+    padding: 20px 16px;
+    margin-bottom: 16px;
+    border-radius: 0 0 24px 24px;
+    box-shadow: 0 4px 20px rgba(139, 69, 19, 0.3);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        opacity: 0.3;
+    }
+}
+
+.chat-title {
+    color: white;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1;
+}
+
+.chat-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    margin: 0;
+    font-weight: 400;
+    position: relative;
+    z-index: 1;
+}
+
+/* Chat Content */
+.chat-content {
+    padding: 0 16px 20px;
+}
+
+/* Messages Container */
+:host ::ng-deep .addon-messages-discussion-container {
+    background: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+/* Message Styling */
+:host ::ng-deep core-message {
+    margin-bottom: 12px;
+}
+
+:host ::ng-deep core-message ion-item {
+    --background: white;
+    --border-radius: 16px;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    margin: 0 0 8px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+    }
+}
+
+/* Date Separator */
+:host ::ng-deep .addon-messages-date {
+    background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+    color: $brand-color;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 8px 16px;
+    margin: 16px 0;
+    border-radius: 20px;
+    text-align: center;
+    border: 1px solid rgba(139, 69, 19, 0.2);
+    display: inline-block;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Special Messages */
+:host ::ng-deep .addon-mod_chat-notice {
+    margin: 12px 0;
+    text-align: center;
+}
+
+:host ::ng-deep .addon-mod_chat-notice ion-badge {
+    --background: rgba(139, 69, 19, 0.1);
+    --color: $brand-color;
+    border: 1px solid rgba(139, 69, 19, 0.2);
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+}
+
+:host ::ng-deep .addon-mod_chat-notice ion-badge[color="success"] {
+    --background: rgba(40, 167, 69, 0.1);
+    --color: #28a745;
+    border-color: rgba(40, 167, 69, 0.2);
+}
+
+:host ::ng-deep .addon-mod_chat-notice ion-badge[color="danger"] {
+    --background: rgba(220, 53, 69, 0.1);
+    --color: #dc3545;
+    border-color: rgba(220, 53, 69, 0.2);
+}
+
+:host ::ng-deep .addon-mod_chat-notice ion-badge[color="primary"] {
+    --background: rgba(139, 69, 19, 0.1);
+    --color: $brand-color;
+    border-color: rgba(139, 69, 19, 0.2);
+}
+
+:host ::ng-deep .addon-mod_chat-notice ion-badge[color="info"] {
+    --background: rgba(23, 162, 184, 0.1);
+    --color: #17a2b8;
+    border-color: rgba(23, 162, 184, 0.2);
+}
+
+:host ::ng-deep .addon-mod_chat-notice ion-badge[color="light"] {
+    --background: rgba(248, 249, 250, 0.8);
+    --color: #6c757d;
+    border-color: rgba(108, 117, 125, 0.2);
+}
+
+/* Empty State */
+:host ::ng-deep core-empty-box {
+    text-align: center;
+    padding: 40px 20px;
+    background: white;
+    border-radius: 16px;
+    margin: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+:host ::ng-deep core-empty-box ion-icon {
+    font-size: 64px;
+    color: #ccc;
+    margin-bottom: 16px;
+}
+
+:host ::ng-deep core-empty-box ion-label {
+    color: #666;
+    font-size: 16px;
+}
+
+/* Footer */
+:host ::ng-deep .footer-adjustable {
+    background: white;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+}
+
+:host ::ng-deep .footer-adjustable ion-toolbar {
+    --background: white;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+}
+
+:host ::ng-deep .footer-adjustable ion-toolbar[color="light"] {
+    --background: #f8f9fa;
+    --color: #6c757d;
+}
+
+:host ::ng-deep .footer-adjustable p {
+    color: #6c757d;
+    font-size: 14px;
+    margin: 8px 0;
+}
+
+:host ::ng-deep .footer-adjustable ion-button {
+    --border-radius: 12px;
+    --padding-start: 20px;
+    --padding-end: 20px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* Send Message Form */
+:host ::ng-deep core-send-message-form {
+    --background: white;
+    --border-radius: 16px;
+    --padding: 12px 16px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+:host ::ng-deep core-send-message-form ion-input {
+    --background: transparent;
+    --padding-start: 12px;
+    --padding-end: 12px;
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+    font-size: 14px;
+}
+
+:host ::ng-deep core-send-message-form ion-button {
+        --background: $brand-color;
+    --color: white;
+    --border-radius: 12px;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+    margin-left: 8px;
+    transition: all 0.2s ease;
+
+    &:hover {
+        --background: #5a6fd8;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+}
+
+/* RTL Support */
+[dir="rtl"] {
+    .chat-title {
+        text-align: right;
+    }
+
+    .chat-subtitle {
+        text-align: right;
+    }
+
+    :host ::ng-deep core-send-message-form ion-button {
+        margin-left: 0;
+        margin-right: 8px;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .chat-header {
+        padding: 16px;
+        margin-bottom: 12px;
+    }
+
+    .chat-title {
+        font-size: 20px;
+    }
+
+    .chat-subtitle {
+        font-size: 13px;
+    }
+
+    .chat-content {
+        padding: 0 12px 16px;
+    }
+
+    :host ::ng-deep core-message ion-item {
+        --padding-start: 12px;
+        --padding-end: 12px;
+        --padding-top: 10px;
+        --padding-bottom: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .chat-header {
+        padding: 12px;
+        border-radius: 0 0 16px 16px;
+    }
+
+    .chat-title {
+        font-size: 18px;
+    }
+
+    .chat-subtitle {
+        font-size: 12px;
+    }
+
+    .chat-content {
+        padding: 0 8px 12px;
+    }
+
+    :host ::ng-deep .addon-messages-date {
+        font-size: 11px;
+        padding: 6px 12px;
+    }
+
+    :host ::ng-deep .addon-mod_chat-notice ion-badge {
+        font-size: 11px;
+        padding: 6px 12px;
     }
 }

@@ -92,24 +92,8 @@ export class CoreLoginMethodsComponent implements OnInit {
      * Set if should show the scan QR code button.
      */
     async setShowScanQR(): Promise<void> {
-        if (this.site) {
-            if (this.site.isDemoModeSite()) {
-                this.showScanQR = false;
-
-                return;
-            }
-
-            this.showScanQR = CoreLoginHelper.displayQRInSiteScreen();
-
-            if (this.showScanQR) {
-                return;
-            }
-        }
-
-        // If still false or credentials screen.
-        if (this.siteConfig) {
-            this.showScanQR = await CoreLoginHelper.displayQRInCredentialsScreen(this.siteConfig.tool_mobile_qrcodetype);
-        }
+        // QR code functionality disabled
+        this.showScanQR = false;
     }
 
     /**

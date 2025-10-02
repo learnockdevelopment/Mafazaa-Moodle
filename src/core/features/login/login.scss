@@ -3,9 +3,18 @@
 :host {
     ion-content,
     ion-list {
-        --background: var(--core-login-background);
-        --ion-item-background: var(--core-login-background);
-        --color: var(--core-login-text-color);
+        --background: #203054;
+        --ion-item-background: #203054;
+        --color: #ffffff;
+    }
+
+    ion-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background: #203054;
     }
 
     ion-item ion-label {
@@ -21,32 +30,868 @@
         text-decoration-color: var(--color);
     }
 
-    .core-login-reconnect-warning {
-        margin: 0px 0px 32px 0px;
+    // Header Section
+    .login-header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding: 20px 0;
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .app-logo {
+                max-width: 200px;
+                max-height: 80px;
+                object-fit: contain;
+            }
+        }
     }
 
-    .core-login-info-box {
-        margin-bottom: 32px;
+    // Register Page Enhancements
+    .category-section {
+        margin: 24px 0;
+        padding: 20px;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
 
-        .core-login-site {
-            core-site-logo {
-                --core-site-logo-max-height: 104px;
-                --core-site-logo-sitename-margin-bottom: 8px;
-                --core-site-logo-sitename-font: var(--mdl-typography-subtitle-font-lg);
+    .category-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        margin: 0 0 16px 0;
+        padding-bottom: 8px;
+        border-bottom: 2px solid $brand-color;
+    }
 
-                --core-site-logo-max-width: 300px;
-                --core-site-logo-width: 90%;
-                --core-site-logo-margin: 0 auto;
+    .section-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        margin: 0 0 12px 0;
+    }
+
+    .recaptcha-section {
+        margin: 24px 0;
+        padding: 20px;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .policy-section {
+        margin: 24px 0;
+        padding: 20px;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .policy-link {
+        margin: 12px 0;
+
+        a {
+            color: $brand-color;
+            text-decoration: none;
+            font-weight: 500;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .policy-checkbox {
+        margin: 16px 0;
+
+        ion-checkbox {
+            --border-color: $brand-color;
+            --border-color-checked: $brand-color;
+            --checkmark-color: white;
+            --background-checked: $brand-color;
+        }
+    }
+
+    .custom-select {
+        --background: transparent;
+        --color: #333;
+        --placeholder-color: #999;
+        --border-radius: 12px;
+        --padding-start: 12px;
+        --padding-end: 12px;
+        --padding-top: 12px;
+        --padding-bottom: 12px;
+        border: 1px solid #e0e0e0;
+        transition: all 0.2s ease;
+
+        &:focus-within {
+            border-color: $brand-color;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+        }
+    }
+
+    .login-link-container {
+        text-align: center;
+        margin-top: 24px;
+        padding: 16px;
+
+        p {
+            color: #666;
+            font-size: 14px;
+            margin: 0;
+
+            a {
+                color: $brand-color;
+                text-decoration: none;
+                font-weight: 500;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+
+    // Password Requirements
+    .password-requirements {
+        margin-top: 12px;
+        padding: 12px;
+        background: #f8f9ff;
+        border-radius: 8px;
+        border: 1px solid rgba(102, 126, 234, 0.2);
+    }
+
+    .requirement {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        font-size: 12px;
+        color: #666;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        &.valid {
+            color: #28a745;
+        }
+    }
+
+    .requirement-icon {
+        margin-right: 8px;
+        font-size: 14px;
+
+        &.valid {
+            color: #28a745;
+        }
+    }
+
+    // Form Container
+    .login-form-container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 0 20px;
+        background: white;
+        border-radius: 16px;
+        padding: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+        .form-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: #203054;
+            margin: 0 0 30px 0;
+        }
+    }
+
+    // Login Form
+    .login-form {
+        width: 100%;
+
+        .input-group {
+            margin-bottom: 20px;
+            width: 100%;
+
+            .input-label {
+                display: block;
+                font-size: 16px;
+                font-weight: 600;
+                color: #333;
+                margin-bottom: 8px;
+                text-align: right;
             }
 
-            .core-siteurl {
-                margin-top: 8px;
-                margin-bottom: 0px;
+            .password-label-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 8px;
+
+                .password-toggle {
+                    background: none;
+                    border: none;
+                    color: #666;
+                    font-size: 14px;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    cursor: pointer;
+                    padding: 0;
+
+                    ion-icon {
+                        font-size: 16px;
+                    }
+                }
+            }
+
+            .input-container {
+                position: relative;
+                width: 100%;
+
+                .custom-input {
+                    --background: white;
+                    --color: #333;
+                    --placeholder-color: #999;
+                    --padding-start: 50px;
+                    --padding-end: 15px;
+                    --padding-top: 15px;
+                    --padding-bottom: 15px;
+                    border: 2px solid #e9ecef;
+                    border-radius: 12px;
+                    font-size: 16px;
+                    transition: all 0.3s ease;
+                    width: 100%;
+
+                    &:focus {
+                        border-color: #203054;
+                        --background: white;
+                        box-shadow: 0 0 0 3px rgba(32, 48, 84, 0.1);
+                    }
+                }
+
+                .input-icon {
+                    position: absolute;
+                    right: 15px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    color: #999;
+                    font-size: 20px;
+                    z-index: 1;
+                }
+
+                .password-toggle-icon {
+                    position: absolute;
+                    left: 15px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    color: #666;
+                    font-size: 18px;
+                    z-index: 2;
+                    cursor: pointer;
+                    background: none;
+                    border: none;
+                    padding: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 24px;
+                    height: 24px;
+
+                    &:hover {
+                        color: #8B4513;
+                    }
+                }
             }
         }
 
-        .core-login-site + .core-login-user {
-            margin-top: 24px;
+        .forgot-password-container {
+            text-align: right;
+            margin-bottom: 25px;
+
+        .forgot-password-link {
+            background: none;
+            border: none;
+            color: #203054;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            padding: 0;
+
+            &:hover {
+                color: #1a2540;
+            }
+        }
+        }
+
+        .login-button {
+            --background: white;
+            --color: #203054;
+            --border-radius: 12px;
+            --padding-top: 15px;
+            --padding-bottom: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 10px;
+            height: 50px;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(32, 48, 84, 0.3);
+            border: 2px solid #203054;
+
+            &:hover {
+                --background: #f8f9ff;
+                --color: #203054;
+            }
+        }
+    }
+
+    // Social Login Section
+    .social-login-separator {
+        display: flex;
+        align-items: center;
+        margin: 30px 0;
+        gap: 15px;
+
+        .separator-line {
+            flex: 1;
+            height: 1px;
+            background: #e9ecef;
+        }
+
+        .separator-text {
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            background: #203054;
+            padding: 0 10px;
+        }
+    }
+
+    .social-login-buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 20px;
+        max-width: 400px;
+        margin: 0 auto;
+
+        .social-button {
+            --background: transparent !important;
+            --color: transparent !important;
+            --border-color: transparent !important;
+            --border-radius: 50% !important;
+            --padding-top: 0 !important;
+            --padding-bottom: 0 !important;
+            --padding-start: 0 !important;
+            --padding-end: 0 !important;
+            --ripple-color: transparent !important;
+            --box-shadow: none !important;
+            width: 60px;
+            height: 60px;
+            font-weight: 500;
+            border: none !important;
+            outline: none !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent !important;
+            box-shadow: none !important;
+            margin: 0 !important;
+            min-height: 0 !important;
+            border-radius: 50% !important;
+
+            &:hover {
+                --background: transparent !important;
+                --color: transparent !important;
+                transform: none !important;
+                box-shadow: none !important;
+                background: transparent !important;
+                outline: none !important;
+                border: none !important;
+            }
+
+            &:focus {
+                --background: transparent !important;
+                --color: transparent !important;
+                box-shadow: none !important;
+                background: transparent !important;
+                outline: none !important;
+                border: none !important;
+            }
+
+            &:active {
+                --background: transparent !important;
+                --color: transparent !important;
+                box-shadow: none !important;
+                background: transparent !important;
+                outline: none !important;
+                border: none !important;
+            }
+
+            ion-icon {
+                font-size: 32px;
+            }
+
+            .social-icon {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                object-fit: contain;
+                display: block;
+            }
+
+            // Ensure all icons are same size
+            ion-icon.social-icon {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                font-size: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            ion-label {
+                display: none;
+            }
+        }
+    }
+
+    // Sign Up Section
+    .signup-section {
+        margin-top: 20px;
+        text-align: center;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+
+        .auth-instructions {
+            margin-bottom: 20px;
+            color: white;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .login-link-container {
+            text-align: center;
+
+            p {
+                color: white;
+                font-size: 16px;
+                margin: 0;
+                display: inline;
+                text-align: center;
+            }
+
+            .signup-button {
+                background: none;
+                border: none;
+                color: white;
+                font-size: 16px;
+                font-weight: bold;
+                text-decoration: underline;
+                cursor: pointer;
+                padding: 0;
+                margin-left: 5px;
+
+                &:hover {
+                    color: #f0f0f0;
+                }
+            }
+        }
+    }
+
+    // Browser Description
+    .browser-description {
+        text-align: center;
+        color: white;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+
+    // RTL Support
+    [dir="rtl"] & {
+        .login-header .logo-container {
+            flex-direction: row-reverse;
+        }
+
+        .logo-text {
+            text-align: right !important;
+        }
+
+        .input-label {
+            text-align: right !important;
+        }
+
+        .password-label-container {
+            flex-direction: row-reverse;
+        }
+
+        .forgot-password-container {
+            text-align: right !important;
+        }
+
+        .input-container .input-icon {
+            right: 15px;
+            left: auto;
+        }
+
+        .password-toggle-icon {
+            right: 15px;
+            left: auto;
+        }
+
+        .custom-input {
+            --padding-start: 50px;
+            --padding-end: 15px;
+            text-align: right;
+        }
+
+        .social-login-buttons {
+            direction: rtl;
+        }
+
+        .login-link-container {
+            text-align: center;
+        }
+
+        .login-link-container p {
+            text-align: center;
+        }
+    }
+
+    [dir="ltr"] & {
+        .login-header .logo-container {
+            flex-direction: row;
+        }
+
+        .logo-text {
+            text-align: left !important;
+        }
+
+        .input-label {
+            text-align: left !important;
+        }
+
+        .password-label-container {
+            flex-direction: row;
+        }
+
+        .forgot-password-container {
+            text-align: left !important;
+        }
+
+        .input-container .input-icon {
+            left: 15px;
+            right: auto;
+        }
+
+        .password-toggle-icon {
+            left: 15px;
+            right: auto;
+        }
+
+        .custom-input {
+            --padding-start: 15px;
+            --padding-end: 50px;
+            text-align: left;
+        }
+
+        .social-login-buttons {
+            direction: ltr;
+        }
+
+        .login-link-container {
+            text-align: center;
+        }
+
+        .login-link-container p {
+            text-align: center;
+        }
+    }
+
+    // Password Requirements
+    .password-requirements {
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .requirement {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #999;
+
+            .requirement-icon {
+                font-size: 16px;
+                color: #999;
+            }
+
+            &.valid {
+                color: #28a745;
+
+                .requirement-icon {
+                    color: #28a745;
+                }
+            }
+        }
+    }
+
+    // Login Link Container
+    .login-link-container {
+        text-align: center;
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        p {
+            color: white;
+            font-size: 14px;
+            margin: 0;
+            text-align: center;
+        }
+
+        .login-link {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 0;
+
+            &:hover {
+                color: #f0f0f0;
+            }
+        }
+    }
+
+    // Google Icon
+    .google-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    // Rounded Icons for Identity Providers
+    .rounded-icon {
+        border-radius: 50%;
+        background: white;
+        padding: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    // Remove all outlines from social buttons globally
+    .social-login-buttons .social-button,
+    .social-login-buttons .social-button:focus,
+    .social-login-buttons .social-button:hover,
+    .social-login-buttons .social-button:active,
+    .social-login-buttons .social-button:focus-visible,
+    .social-login-buttons .social-button:focus-within,
+    .social-login-buttons .social-button:target {
+        outline: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        --outline: none !important;
+        --border: none !important;
+        --box-shadow: none !important;
+        --border-width: 0 !important;
+        --border-style: none !important;
+        --border-color: transparent !important;
+        --outline-width: 0 !important;
+        --outline-style: none !important;
+        --outline-color: transparent !important;
+        --outline-offset: 0 !important;
+        --box-shadow: none !important;
+        --shadow: none !important;
+        --ripple-color: transparent !important;
+        --background: transparent !important;
+        --background-activated: transparent !important;
+        --background-focused: transparent !important;
+        --background-hover: transparent !important;
+        --color: transparent !important;
+        --color-activated: transparent !important;
+        --color-focused: transparent !important;
+        --color-hover: transparent !important;
+    }
+
+    // Global button override to remove all borders
+    .social-login-buttons button,
+    .social-login-buttons ion-button,
+    .social-login-buttons .social-button,
+    .social-login-buttons core-identity-provider button,
+    .social-login-buttons core-identity-provider ion-button {
+        all: unset !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 70px !important;
+        height: 70px !important;
+        border-radius: 50% !important;
+        background: transparent !important;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+        cursor: pointer !important;
+        --background: transparent !important;
+        --border: none !important;
+        --outline: none !important;
+        --box-shadow: none !important;
+    }
+
+    // Social Media Icon Colors
+    .social-button {
+        // Override all Ionic button styles
+        --background: transparent !important;
+        --background-activated: transparent !important;
+        --background-focused: transparent !important;
+        --background-hover: transparent !important;
+        --color: transparent !important;
+        --color-activated: transparent !important;
+        --color-focused: transparent !important;
+        --color-hover: transparent !important;
+        --border-color: transparent !important;
+        --border-radius: 0 !important;
+        --box-shadow: none !important;
+        --ripple-color: transparent !important;
+        --opacity: 1 !important;
+        outline: none !important;
+        border: none !important;
+        box-shadow: none !important;
+
+        // Remove all focus, hover, and active states
+        &:focus, &:hover, &:active, &:focus-visible {
+            outline: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            --outline: none !important;
+            --border: none !important;
+            --box-shadow: none !important;
+        }
+
+        // Facebook
+        &[aria-label*="Facebook"], &[aria-label*="facebook"] {
+            background: transparent !important;
+
+            ion-icon, .social-icon {
+                color: #1877F2 !important;
+            }
+        }
+
+        // Twitter
+        &[aria-label*="Twitter"], &[aria-label*="twitter"] {
+            background: transparent !important;
+
+            ion-icon, .social-icon {
+                color: #1DA1F2 !important;
+            }
+        }
+
+        // Google
+        &[aria-label*="Google"], &[aria-label*="google"] {
+            background: transparent !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+
+            &:focus, &:hover, &:active, &:focus-visible {
+                outline: none !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
+
+            .social-icon {
+                filter: none !important;
+                width: 40px !important;
+                height: 40px !important;
+                object-fit: contain !important;
+                border: none !important;
+                outline: none !important;
+                border-radius: 50% !important;
+            }
+        }
+
+        // Microsoft
+        &[aria-label*="Microsoft"], &[aria-label*="microsoft"] {
+            background: transparent !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+
+            &:focus, &:hover, &:active, &:focus-visible {
+                outline: none !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
+
+            .social-icon {
+                filter: none !important;
+                color: #00BCF2 !important;
+                width: 40px !important;
+                height: 40px !important;
+                object-fit: contain !important;
+                border: none !important;
+                outline: none !important;
+                border-radius: 50% !important;
+            }
+        }
+
+        // Default styling for other providers
+        &:not([aria-label*="Facebook"]):not([aria-label*="Twitter"]):not([aria-label*="Google"]):not([aria-label*="Microsoft"]) {
+            background: transparent !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+
+            &:focus, &:hover, &:active, &:focus-visible {
+                outline: none !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
+
+            ion-icon, .social-icon {
+                color: #333 !important;
+            }
+        }
+
+        // Ensure consistent sizing for all icons
+        ion-icon, .social-icon {
+            width: 40px !important;
+            height: 40px !important;
+            border-radius: 50% !important;
+            object-fit: contain !important;
+            max-width: 40px !important;
+            max-height: 40px !important;
+            min-width: 40px !important;
+            min-height: 40px !important;
+        }
+
+        // Specific sizing for different icon types
+        .social-icon {
+            width: 40px !important;
+            height: 40px !important;
+            object-fit: contain !important;
+            border: none !important;
+            outline: none !important;
+            border-radius: 50% !important;
+        }
+
+        ion-icon.social-icon {
+            width: 32px !important;
+            height: 32px !important;
+            font-size: 32px !important;
+            line-height: 32px !important;
+            border-radius: 50% !important;
         }
     }
 

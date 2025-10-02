@@ -1,0 +1,50 @@
+@use "theme/globals" as *;
+
+// Ensure infinite loading buttons are fully scrollable and viewable
+:host {
+    display: block;
+    width: 100%;
+    overflow: visible;
+}
+
+ion-button {
+    min-height: 44px;
+    margin: 8px 0;
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+    white-space: normal;
+    word-wrap: break-word;
+    line-height: 1.2;
+
+    // Ensure button text is properly wrapped
+    ion-label {
+        white-space: normal;
+        word-wrap: break-word;
+        line-height: 1.2;
+        text-align: center;
+    }
+}
+
+// Ensure proper spacing for the button container
+.ion-padding-horizontal {
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 8px;
+}
+
+// Fix infinite scroll positioning
+ion-infinite-scroll {
+    position: relative;
+    z-index: 1;
+}
+
+// Ensure loading spinner is properly positioned
+.ion-padding {
+    padding: 16px;
+    text-align: center;
+}
+
+ion-spinner {
+    margin: 0 auto;
+}

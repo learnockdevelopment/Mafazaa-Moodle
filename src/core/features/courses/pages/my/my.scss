@@ -13,3 +13,849 @@ core-block ::ng-deep ion-card.addon-block-myoverview {
     --border-width: 0;
     margin: 0;
 }
+
+/* Custom Header Styles */
+.custom-header {
+    --background: white;
+    --border-width: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1000;
+    width: 100%;
+}
+
+.custom-toolbar {
+    --background: white;
+    --border-width: 0;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 60px;
+    position: relative;
+    width: 100%;
+    z-index: 1001;
+}
+
+.user-profile-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1002;
+}
+
+.notifications-section {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1002;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #f0f0f0;
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+
+
+.user-role {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+}
+
+.notification-btn {
+    --color: #8B4513;
+    --background: transparent;
+    --border-radius: 8px;
+    --padding: 8px;
+    margin: 0;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+}
+
+.notification-icon {
+    font-size: 24px;
+    color: #666;
+}
+
+/* Home Content Styles */
+.home-content {
+    --background: #f8f9fa;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --padding-top: 16px;
+    --padding-bottom: 16px;
+}
+
+/* Text Banner */
+.text-banner {
+    background: linear-gradient(135deg, #D4A574, #C19A6B);
+    border-radius: 16px;
+    padding: 32px 24px;
+    margin: 16px 16px 24px 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    position: relative;
+    overflow: hidden;
+    min-height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+        pointer-events: none;
+    }
+}
+
+.banner-content {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.welcome-text {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    max-width: 100%;
+}
+
+.welcome-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    margin: 0 0 12px 0;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    line-height: 1.2;
+    letter-spacing: 0.5px;
+}
+
+.welcome-subtitle {
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    line-height: 1.4;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Search Section */
+.search-section {
+    margin-bottom: 20px;
+}
+
+.search-container {
+    position: relative;
+}
+
+.search-input {
+    --background: white;
+    --border-radius: 12px;
+    --border-width: 1px;
+    --border-color: #e0e0e0;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    font-size: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.search-icon {
+    color: #666;
+    font-size: 20px;
+}
+
+/* Filters Section */
+.filters-section {
+    margin-bottom: 24px;
+    direction: ltr; // Keep filters LTR for proper text display
+}
+
+.filters-section[dir="rtl"] {
+    direction: rtl;
+}
+
+.filter-dropdowns {
+    display: flex;
+    gap: 16px;
+    padding: 0 16px;
+    flex-wrap: wrap;
+    direction: ltr; // Keep dropdowns LTR for proper text display
+}
+
+.filter-dropdown {
+    --background: white;
+    --color: #333;
+    --border-color: #e0e0e0;
+    --border-radius: 12px;
+    --border-width: 1px;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    flex: 1;
+    min-width: 150px;
+    transition: all 0.3s ease;
+    text-align: center;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    &.select-expanded {
+        --border-color: #8B4513;
+        box-shadow: 0 6px 20px rgba(139, 69, 19, 0.3);
+    }
+
+    ion-select {
+        --color: #333;
+        --placeholder-color: #666;
+        font-size: 14px;
+        font-weight: 500;
+        text-align: center;
+        direction: ltr;
+        width: 100%;
+    }
+
+    ion-select-option {
+        --color: #333;
+        font-size: 14px;
+        text-align: center;
+        direction: ltr;
+    }
+}
+
+
+/* Section Header */
+.section-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 16px;
+    text-align: right !important;
+    direction: rtl !important;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+    text-align: right !important;
+    direction: rtl !important;
+}
+
+/* Force RTL for section titles globally with maximum specificity */
+:host .section-title,
+:host-context([dir="rtl"]) .section-title,
+[dir="rtl"] .section-title,
+.section-header .section-title,
+h3.section-title,
+:host h3.section-title,
+:host-context([dir="rtl"]) h3.section-title,
+[dir="rtl"] h3.section-title {
+    text-align: right !important;
+    direction: rtl !important;
+}
+
+/* Ensure parent container doesn't override */
+.section-header {
+    text-align: right !important;
+    direction: rtl !important;
+    justify-content: flex-end !important;
+    align-items: flex-start !important;
+}
+
+/* Additional aggressive overrides for section titles */
+:host ::ng-deep .section-title,
+:host ::ng-deep h3.section-title,
+:host ::ng-deep .section-header h3 {
+    text-align: right !important;
+    direction: rtl !important;
+}
+
+/* Force RTL on the entire page for section titles */
+:host[dir="rtl"] .section-title,
+:host[dir="rtl"] h3.section-title,
+:host[dir="rtl"] .section-header h3 {
+    text-align: right !important;
+    direction: rtl !important;
+}
+
+/* Ensure section title is positioned at top right */
+.section-header .section-title {
+    align-self: flex-start !important;
+    margin-left: auto !important;
+    margin-right: 0 !important;
+    text-align: right !important;
+    direction: rtl !important;
+}
+
+/* Additional specificity for RTL section titles */
+[dir="rtl"] .section-header .section-title,
+[dir="rtl"] .section-header h3.section-title {
+    text-align: right !important;
+    direction: rtl !important;
+    margin-left: auto !important;
+    margin-right: 0 !important;
+}
+
+/* Maximum specificity override for section titles */
+.home-content .section-header h3.section-title,
+.home-content[dir="rtl"] .section-header h3.section-title,
+ion-content.home-content .section-header h3.section-title,
+ion-content.home-content[dir="rtl"] .section-header h3.section-title {
+    text-align: right !important;
+    direction: rtl !important;
+    margin-left: auto !important;
+    margin-right: 0 !important;
+    align-self: flex-start !important;
+    justify-self: flex-end !important;
+}
+
+.view-all-btn {
+    --color: #8B4513;
+    --background: transparent;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: none;
+}
+
+/* Course Cards Container */
+.courses-container {
+    margin-bottom: 80px; /* Space for bottom navigation */
+}
+
+/* RTL Support */
+[dir="rtl"] {
+    .user-profile-section {
+        left: auto;
+        right: 16px;
+    }
+
+    .notifications-section {
+        right: auto;
+        left: 16px;
+    }
+
+    .user-info {
+        flex-direction: row !important; // Always avatar first, then name
+    }
+
+    .banner-content {
+        text-align: center;
+    }
+
+    .welcome-text {
+        text-align: center;
+    }
+
+    .section-title {
+        text-align: right !important;
+        direction: rtl !important;
+        margin-left: auto !important;
+        margin-right: 0 !important;
+    }
+
+    .welcome-title {
+        text-align: center;
+    }
+
+    .welcome-subtitle {
+        text-align: center;
+    }
+
+    .section-header {
+        flex-direction: row;
+        justify-content: flex-end !important;
+        align-items: flex-start !important;
+    }
+
+    .section-title {
+        text-align: right !important;
+        direction: rtl !important;
+        margin-left: auto !important;
+        margin-right: 0 !important;
+    }
+
+    .filter-dropdowns {
+        flex-direction: row-reverse;
+        direction: rtl;
+    }
+
+    .filter-dropdown {
+        text-align: right;
+        direction: ltr; // Keep dropdown content LTR for proper display
+
+        ion-select {
+            text-align: right;
+            direction: ltr; // Keep select content LTR
+        }
+
+        ion-select-option {
+            text-align: right;
+            direction: ltr; // Keep options LTR
+        }
+    }
+
+    .filters-section {
+        direction: rtl;
+    }
+
+    /* Course cards RTL */
+    .course-card {
+        text-align: right;
+        direction: rtl;
+    }
+
+    .course-content {
+        text-align: right;
+        direction: rtl;
+    }
+
+    .course-title {
+        text-align: right;
+    }
+
+    .course-instructor,
+    .course-duration {
+        flex-direction: row-reverse;
+        text-align: right;
+    }
+
+    .course-rating {
+        flex-direction: row-reverse;
+    }
+
+    .stars {
+        flex-direction: row-reverse;
+    }
+
+    .star-icon {
+        margin-right: 0;
+        margin-left: 2px;
+    }
+
+    .info-icon {
+        margin-right: 0;
+        margin-left: 6px;
+    }
+
+    .view-details-btn {
+        text-align: center;
+    }
+
+    /* Search input RTL */
+    .search-container {
+        text-align: right;
+        direction: rtl;
+    }
+
+    .search-input {
+        text-align: right;
+        direction: rtl;
+    }
+
+    /* Course image RTL */
+    .course-image {
+        direction: ltr; // Keep image orientation as is
+    }
+
+}
+
+/* LTR Support */
+[dir="ltr"] {
+    .user-profile-section {
+        left: 16px;
+        right: auto;
+    }
+
+    .notifications-section {
+        right: 16px;
+        left: auto;
+    }
+
+    .user-info {
+        flex-direction: row !important;
+    }
+
+
+
+    .banner-content {
+        text-align: center;
+    }
+
+    .welcome-text {
+        text-align: center;
+    }
+
+    .welcome-title {
+        text-align: center;
+    }
+
+    .welcome-subtitle {
+        text-align: center;
+    }
+
+    .section-header {
+        flex-direction: row;
+    }
+
+
+    .filter-dropdowns {
+        flex-direction: row;
+    }
+
+    .search-container {
+        text-align: left;
+    }
+
+    .search-input {
+        text-align: left;
+    }
+
+    .course-card {
+        text-align: left;
+    }
+
+    .course-title {
+        text-align: left;
+        direction: ltr;
+    }
+
+    .course-instructor,
+    .course-duration {
+        flex-direction: row;
+    }
+
+    .course-rating {
+        flex-direction: row;
+    }
+
+    .stars {
+        flex-direction: row;
+    }
+
+    .star-icon {
+        margin-right: 2px;
+        margin-left: 0;
+    }
+
+    .info-icon {
+        margin-right: 6px;
+        margin-left: 0;
+    }
+
+    .view-details-btn {
+        text-align: center;
+    }
+
+    .course-content {
+        text-align: left;
+    }
+
+    .instructor-name,
+    .duration-text {
+        text-align: left;
+    }
+}
+
+/* Vertical Course Cards */
+.courses-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.course-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    }
+}
+
+.course-image {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 12px 12px 0 0;
+
+    core-course-image {
+        width: 100%;
+        height: 100%;
+        display: block;
+
+        &.card-top {
+            --core-card-top-padding: 0;
+            --core-image-radius: 0;
+            --core-image-size: 100%;
+            --core-image-visibility: visible;
+        }
+    }
+
+    // Ensure images fill the container properly
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 12px 12px 0 0;
+    }
+
+    // Fallback icon styling
+    ion-icon {
+        font-size: 48px;
+        color: white;
+        opacity: 0.8;
+    }
+}
+
+.course-content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.course-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.course-instructor,
+.course-duration {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #666;
+    font-size: 14px;
+}
+
+.info-icon {
+    font-size: 16px;
+    color: #666;
+}
+
+.instructor-name,
+.duration-text {
+    font-weight: 500;
+}
+
+.course-rating {
+    display: flex;
+    align-items: center;
+    margin: 4px 0;
+}
+
+.stars {
+    display: flex;
+    gap: 2px;
+}
+
+.star-icon {
+    font-size: 16px;
+    color: #ddd;
+    margin-right: 2px;
+    transition: color 0.2s ease;
+
+    &.filled {
+        color: #ffc107;
+    }
+}
+
+.view-details-btn {
+    --background: #8B4513;
+    --color: white;
+    --border-radius: 8px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    font-weight: 600;
+    margin-top: 8px;
+    width: 100%;
+}
+
+/* No Courses State */
+.no-courses {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.no-courses-icon {
+    font-size: 64px;
+    color: #ddd;
+    margin-bottom: 16px;
+}
+
+.no-courses-text {
+    font-size: 16px;
+    margin: 0;
+}
+
+/* Loading Skeleton */
+.courses-loading {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.course-card-skeleton {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.skeleton-image {
+    width: 100%;
+    height: 180px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+}
+
+.skeleton-content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.skeleton-title {
+    height: 20px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 4px;
+    width: 80%;
+}
+
+.skeleton-line {
+    height: 16px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 4px;
+    width: 60%;
+}
+
+.skeleton-button {
+    height: 40px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 8px;
+    width: 100%;
+    margin-top: 8px;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* RTL Support for Course Cards */
+[dir="rtl"] .course-card {
+    text-align: right;
+}
+
+[dir="rtl"] .course-instructor,
+[dir="rtl"] .course-duration {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .course-rating {
+    flex-direction: row-reverse;
+}
+
+/* Large Screen Support */
+@media (min-width: 1024px) {
+    .custom-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        width: 100%;
+    }
+
+    .custom-toolbar {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .user-profile-section,
+    .notifications-section {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1002;
+    }
+
+    .home-content {
+        margin-top: 60px; /* Add margin to account for fixed header */
+    }
+}

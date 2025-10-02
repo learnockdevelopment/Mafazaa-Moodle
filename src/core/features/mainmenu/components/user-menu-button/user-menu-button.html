@@ -1,4 +1,6 @@
 @if ((alwaysShow || (isMainScreen && menuPage?.tabsPlacement === 'bottom')) && siteInfo) {
-    <core-user-avatar [site]="siteInfo" class="core-bar-button-image clickable" [linkProfile]="false"
-        (ariaButtonClick)="openUserMenu($event)" [userTour]="userTour" [attr.aria-label]="'core.user.useraccount' | translate" />
+    <div [dir]="currentLang === 'ar' ? 'rtl' : 'ltr'">
+        <core-user-avatar [site]="siteInfo" class="core-bar-button-image clickable" [linkProfile]="false"
+            (ariaButtonClick)="openUserMenu($event)" [userTour]="userTour" [attr.aria-label]="'core.user.useraccount' | translate" />
+    </div>
 }

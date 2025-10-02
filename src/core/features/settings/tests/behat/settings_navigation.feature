@@ -24,7 +24,7 @@ Feature: It navigates properly within settings.
 
     When I go back in the app
     And I press "About" in the app
-    Then I should find "Moodle Mobile" in the app
+    Then I should find "Mafaza" in the app
     And I should find "Privacy policy" in the app
 
     # Preferences
@@ -61,7 +61,7 @@ Feature: It navigates properly within settings.
 
     When I press "About" in the app
     Then "About" should be selected in the app
-    And I should find "Moodle Mobile" in the app
+    And I should find "Mafaza" in the app
     And I should find "Privacy policy" in the app
 
     # Preferences

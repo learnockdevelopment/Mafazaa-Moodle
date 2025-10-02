@@ -48,14 +48,11 @@ export default class CoreSettingsGeneralPage {
     selectedLanguage = '';
     zoomLevels: { value: CoreZoomLevel; style: number; selected: boolean }[] = [];
     selectedZoomLevel = CoreZoomLevel.NONE;
+    currentLang = 'ar';
     pinchToZoom = false;
     debugDisplay = false;
     analyticsAvailable = false;
     analyticsEnabled = false;
-    colorSchemes: CoreColorScheme[] = [];
-    selectedScheme: CoreColorScheme = CoreColorScheme.LIGHT;
-    colorSchemeDisabled = false;
-    isAndroid = false;
     displayIframeHelp = false;
 
     protected editorSettingsComponentClass?: Type<unknown>;
@@ -80,20 +77,8 @@ export default class CoreSettingsGeneralPage {
         // Sort them by name.
         this.languages.sort((a, b) => a.name.localeCompare(b.name));
         this.selectedLanguage = await CoreLang.getCurrentLanguage();
+        this.currentLang = this.selectedLanguage;
 
-        // Configure color schemes.
-        if (!CoreConstants.CONFIG.forceColorScheme) {
-            this.colorSchemeDisabled = CoreSettingsHelper.isColorSchemeDisabledInSite();
-
-            if (this.colorSchemeDisabled) {
-                this.colorSchemes.push(CoreColorScheme.LIGHT);
-                this.selectedScheme = this.colorSchemes[0];
-            } else {
-                this.isAndroid = CorePlatform.isAndroid();
-                this.colorSchemes = CoreSettingsHelper.getAllowedColorSchemes();
-                this.selectedScheme = await CoreConfig.get(CoreConstants.SETTINGS_COLOR_SCHEME, CoreColorScheme.LIGHT);
-            }
-        }
 
         this.selectedZoomLevel = await CoreSettingsHelper.getZoomLevel();
 
@@ -182,11 +167,17 @@ export default class CoreSettingsGeneralPage {
      * we'll need to listen to lang change on Slides to change direction.
      */
     protected async applyLanguageAndRestart(): Promise<void> {
+        // Update current language
+        this.currentLang = this.selectedLanguage;
+
         // Invalidate cache for all sites to get the content in the right language.
         const sites = await CoreSites.getSitesInstances();
         await CorePromiseUtils.ignoreErrors(Promise.all(sites.map((site) => site.invalidateWsCache())));
 
-        CoreEvents.trigger(CoreEvents.LANGUAGE_CHANGED, this.selectedLanguage);
+        CoreEvents.trigger(CoreEvents.LANGUAGE_CHANGED, {
+            newLang: this.selectedLanguage,
+            oldLang: this.currentLang
+        });
 
         CoreNavigator.navigate('/reload', {
             reset: true,
@@ -228,18 +219,6 @@ export default class CoreSettingsGeneralPage {
         CoreConfig.set(CoreConstants.SETTINGS_PINCH_TO_ZOOM, this.pinchToZoom ? 1 : 0);
     }
 
-    /**
-     * Called when a new color scheme is selected.
-     *
-     * @param ev Event
-     */
-    colorSchemeChanged(ev: Event): void {
-        ev.stopPropagation();
-        ev.preventDefault();
-
-        CoreSettingsHelper.setColorScheme(this.selectedScheme);
-        CoreConfig.set(CoreConstants.SETTINGS_COLOR_SCHEME, this.selectedScheme);
-    }
 
     /**
      * Called when the debug display setting is enabled or disabled.

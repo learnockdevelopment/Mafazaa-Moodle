@@ -30,6 +30,7 @@ const THRESHOLD = .15; // % of the scroll element height that must be close to t
 @Component({
     selector: 'core-infinite-loading',
     templateUrl: 'core-infinite-loading.html',
+    styleUrl: 'infinite-loading.scss',
     imports: [
         CoreBaseModule,
         CoreUpdateNonReactiveAttributesDirective,

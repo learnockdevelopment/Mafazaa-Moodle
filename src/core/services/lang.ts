@@ -32,8 +32,8 @@ import { CoreSites } from './sites';
 @Injectable({ providedIn: 'root' })
 export class CoreLangProvider {
 
-    protected fallbackLanguage = 'en'; // Always use English as fallback language since it contains all strings.
-    protected defaultLanguage = CoreConstants.CONFIG.default_lang || 'en'; // Lang to use if device lang not valid or is forced.
+    protected fallbackLanguage = 'ar'; // Always use English as fallback language since it contains all strings.
+    protected defaultLanguage = CoreConstants.CONFIG.default_lang || 'ar'; // Lang to use if device lang not valid or is forced.
     protected currentLanguage?: string; // Save current language in a variable to speed up the get function.
     protected customStrings: CoreLanguageObject = {}; // Strings defined using the admin tool.
     protected customStringsRaw?: string;
@@ -70,7 +70,7 @@ export class CoreLangProvider {
 
         if (CorePlatform.isAutomated()) {
             // Force current language to English when Behat is running.
-            language = 'en';
+            language = 'ar';
         } else {
             language = await this.getCurrentLanguage();
         }
@@ -224,7 +224,7 @@ export class CoreLangProvider {
      */
     protected async loadDayJSLocale(locale: string): Promise<void> {
         // Use british english when parent english is loaded.
-        locale = locale === 'en' ? 'en-gb' : locale;
+        locale = locale === 'ar' ? 'en-gb' : locale;
 
         try {
             await import('dayjs/locale/' + locale);
@@ -240,19 +240,19 @@ export class CoreLangProvider {
                 });
             }
         } catch {
-            if (locale === 'en' || locale === 'en-gb') {
+            if (locale === 'ar' || locale === 'en-gb') {
                 return;
             }
             const parentLang = await this.getParentLanguageForLang(locale);
             const parentLangUsingHyphen = locale.substring(0, locale.indexOf('-'));
 
-            if (parentLangUsingHyphen && (parentLang === 'en' || parentLang === undefined)) {
+            if (parentLangUsingHyphen && (parentLang === 'ar' || parentLang === undefined)) {
                 await this.loadDayJSLocale(parentLangUsingHyphen);
 
                 return;
             }
 
-            await this.loadDayJSLocale(parentLang ?? 'en');
+            await this.loadDayJSLocale(parentLang ?? 'ar');
         }
     }
 

@@ -171,72 +171,8 @@ export class AddonMessageOutputAirnotifierProvider {
      * @returns Promise resolved when done.
      */
     protected async warnPushDisabledForAdmin(siteId?: string): Promise<void> {
-        if (!siteId) {
-            return;
-        }
-
-        try {
-            const site = await CoreSites.getSite(siteId);
-
-            if (!site.getInfo()?.userissiteadmin) {
-                // Not an admin or we don't know, stop.
-                return;
-            }
-
-            // Check if the admin already asked not to be reminded.
-            const dontAsk = await site.getLocalSiteConfig('AddonMessageOutputAirnotifierDontRemindDisabled', 0);
-            if (dontAsk) {
-                return;
-            }
-
-            // Check if airnotifier is configured.
-            const isConfigured = await this.isSystemConfigured({
-                readingStrategy: CoreSitesReadingStrategy.ONLY_NETWORK,
-                siteId,
-            });
-
-            if (isConfigured) {
-                return;
-            }
-
-            // Warn the admin.
-            const dontShowAgain = await CorePrompts.show(
-                Translate.instant('addon.messageoutput_airnotifier.pushdisabledwarning'),
-                'checkbox',
-                {
-                    placeholderOrLabel: Translate.instant('core.dontshowagain'),
-                    buttons: [
-                        {
-                            text: Translate.instant('core.ok'),
-                        },
-                        {
-                            text: Translate.instant('core.goto', { $a: Translate.instant('core.settings.settings') }),
-                            handler: (data, resolve) => {
-                                resolve(data[0]);
-
-                                const url = CorePath.concatenatePaths(
-                                    site.getURL(),
-                                    site.isVersionGreaterEqualThan('3.11') ?
-                                        'message/output/airnotifier/checkconfiguration.php' :
-                                        'admin/message.php',
-                                );
-
-                                // Don't try auto-login, admins cannot use it.
-                                CoreOpener.openInBrowser(url, {
-                                    showBrowserWarning: false,
-                                });
-                            },
-                        },
-                    ],
-                },
-            );
-
-            if (dontShowAgain) {
-                await site.setLocalSiteConfig('AddonMessageOutputAirnotifierDontRemindDisabled', 1);
-            }
-        } catch {
-            // Ignore errors.
-        }
+        // Alert disabled - return immediately without showing any notification
+        return;
     }
 
 }
@@ -248,7 +184,7 @@ export const AddonMessageOutputAirnotifier = makeSingleton(AddonMessageOutputAir
  */
 export type AddonMessageOutputAirnotifierDevice = {
     id: number; // Device id (in the message_airnotifier table).
-    appid: string; // The app id, something like com.moodle.moodlemobile.
+    appid: string; // The app id, something like com.learnockapp1.app.
     name: string; // The device name, 'occam' or 'iPhone' etc.
     model: string; // The device model 'Nexus4' or 'iPad1,1' etc.
     platform: string; // The device platform 'iOS' or 'Android' etc.

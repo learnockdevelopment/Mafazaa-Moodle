@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, HostBinding, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 
 import { CoreTabsOutletTab, CoreTabsOutletComponent } from '@components/tabs-outlet/tabs-outlet';
@@ -72,10 +72,6 @@ export default class CoreCourseIndexPage implements OnInit, OnDestroy {
     };
 
     protected route = inject(ActivatedRoute);
-
-    @HostBinding('attr.data-course-id') protected get courseId(): number | null {
-        return this.course?.id ?? null;
-    }
 
     constructor() {
         this.selectTabObserver = CoreEvents.on(CoreEvents.SELECT_COURSE_TAB, (data) => {

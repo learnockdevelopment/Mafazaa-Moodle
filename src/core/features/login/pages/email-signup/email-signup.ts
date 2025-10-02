@@ -93,10 +93,15 @@ export default class CoreLoginEmailSignupPage implements OnInit {
     // Validation errors.
     usernameErrors: CoreInputErrorsMessages;
     passwordErrors: CoreInputErrorsMessages;
+    password2Errors: CoreInputErrorsMessages;
     emailErrors: CoreInputErrorsMessages;
     email2Errors: CoreInputErrorsMessages;
     policyErrors: CoreInputErrorsMessages;
     namefieldsErrors?: Record<string, CoreInputErrorsMessages>;
+
+    // Password visibility
+    showPassword = false;
+    showConfirmPassword = false;
 
     protected fb = inject(FormBuilder);
     protected element: HTMLElement = inject(ElementRef).nativeElement;
@@ -113,6 +118,7 @@ export default class CoreLoginEmailSignupPage implements OnInit {
         // Create the signupForm with the basic controls. More controls will be added later.
         this.signupForm = this.fb.group({
             password: ['', Validators.required],
+            password2: ['', Validators.required],
             email: ['', Validators.compose([Validators.required, Validators.email])],
             email2: ['', Validators.compose([Validators.required, Validators.email])],
         });
@@ -126,6 +132,10 @@ export default class CoreLoginEmailSignupPage implements OnInit {
             },
         };
         this.passwordErrors = { required: 'core.login.passwordrequired' };
+        this.password2Errors = {
+            required: 'core.login.passwordrequired',
+            pattern: 'core.login.passwordnotmatch'
+        };
         this.emailErrors = { required: 'core.login.missingemail' };
         this.policyErrors = { required: 'core.policy.policyagree' };
         this.email2Errors = {
@@ -281,6 +291,41 @@ export default class CoreLoginEmailSignupPage implements OnInit {
             return false;
         }
     }
+
+    /**
+     * Toggle password visibility.
+     */
+    togglePasswordVisibility(): void {
+        this.showPassword = !this.showPassword;
+    }
+
+    /**
+     * Toggle confirm password visibility.
+     */
+    toggleConfirmPasswordVisibility(): void {
+        this.showConfirmPassword = !this.showConfirmPassword;
+    }
+
+    /**
+     * Check if password requirement is met.
+     */
+    isPasswordRequirementMet(requirement: string): boolean {
+        const password = this.signupForm?.get('password')?.value || '';
+
+        switch (requirement) {
+            case 'length':
+                return password.length >= 8;
+            case 'lowercase':
+                return /[a-z]/.test(password);
+            case 'uppercase':
+                return /[A-Z]/.test(password);
+            case 'special':
+                return /[!@#$%^&*(),.?":{}|<>]/.test(password);
+            default:
+                return false;
+        }
+    }
+
 
     /**
      * Create account.
@@ -451,6 +496,14 @@ export default class CoreLoginEmailSignupPage implements OnInit {
         } finally {
             modal.dismiss();
         }
+    }
+
+    /**
+     * Navigate to login page.
+     */
+    goToLogin(event: Event): void {
+        event.preventDefault();
+        CoreNavigator.navigateToSitePath('/login/credentials');
     }
 
 }

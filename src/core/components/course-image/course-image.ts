@@ -58,35 +58,53 @@ export class CoreCourseImageComponent {
      * Set course color.
      */
     protected async setCourseColor(): Promise<void> {
-        const course = this.course();
+        try {
+            const course = this.course();
 
-        // Moodle 4.1 downwards geopatterns are embedded in b64 in only some WS, remove them to keep it coherent.
-        if (course.courseimage?.startsWith('data')) {
-            course.courseimage = undefined;
-        }
+            // Moodle 4.1 downwards geopatterns are embedded in b64 in only some WS, remove them to keep it coherent.
+            if (course.courseimage?.startsWith('data')) {
+                course.courseimage = undefined;
+            }
 
-        if (course.courseimage !== undefined) {
-            return;
-        }
+            // First check if courseimage is already set
+            if (course.courseimage) {
+                return;
+            }
 
-        if (course.overviewfiles && course.overviewfiles[0]) {
-            course.courseimage = course.overviewfiles[0].fileurl;
+            // Try to get image from overviewfiles
+            if (course.overviewfiles && course.overviewfiles.length > 0) {
+                const imageUrl = course.overviewfiles[0].fileurl;
+                if (imageUrl) {
+                    course.courseimage = imageUrl;
+                    return;
+                }
+            }
 
-            return;
-        }
+            // If still no image, set the color.
+            try {
+                const colors = await CoreCoursesHelper.getCourseSiteColors();
+                const colorNumber = course.id % 10;
+                const color = colors.length ? colors[colorNumber] : undefined;
 
-        // If no image, set the color.
-        const colors = await CoreCoursesHelper.getCourseSiteColors();
-        const colorNumber = course.id % 10;
-        const color = colors.length ? colors[colorNumber] : undefined;
+                if (color) {
+                    this.element.style.setProperty('--course-color', color);
 
-        if (color) {
-            this.element.style.setProperty('--course-color', color);
-
-            const tint = CoreColors.lighter(color, 50);
-            this.element.style.setProperty('--course-color-tint', tint);
-        } else {
+                    const tint = CoreColors.lighter(color, 50);
+                    this.element.style.setProperty('--course-color-tint', tint);
+                } else {
+                    this.element.classList.add(`course-color-${colorNumber}`);
+                }
+            } catch (colorError) {
+                // Set a default color
+                const colorNumber = course.id % 10;
+                this.element.classList.add(`course-color-${colorNumber}`);
+                this.element.style.setProperty('--course-color', '#8B4513');
+            }
+        } catch (error) {
+            // Set a default color on error
+            const colorNumber = this.course().id % 10;
             this.element.classList.add(`course-color-${colorNumber}`);
+            this.element.style.setProperty('--course-color', '#8B4513');
         }
     }
 

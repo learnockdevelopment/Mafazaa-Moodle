@@ -32,7 +32,6 @@ import { CoreSites } from '@services/sites';
 import { ModalController, Translate } from '@singletons';
 import { Subscription } from 'rxjs';
 import { CoreLoginHelper } from '@features/login/services/login-helper';
-import { CoreSiteLogoComponent } from '@/core/components/site-logo/site-logo';
 import { CoreAlerts } from '@services/overlays/alerts';
 
 /**
@@ -44,7 +43,6 @@ import { CoreAlerts } from '@services/overlays/alerts';
     styleUrl: 'user-menu.scss',
     imports: [
         CoreSharedModule,
-        CoreSiteLogoComponent,
     ],
 })
 export class CoreMainMenuUserMenuComponent implements OnInit, OnDestroy {

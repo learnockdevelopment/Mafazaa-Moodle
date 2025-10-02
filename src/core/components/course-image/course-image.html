@@ -3,5 +3,7 @@
         <img [url]="course().courseimage" core-external-content alt="" (error)="loadFallbackCourseIcon()" />
     </ion-avatar>
 } @else {
-    <ion-icon name="fas-graduation-cap" slot="start" aria-hidden="true" class="course-icon-fallback" />
+    <ion-avatar slot="start" class="course-icon-fallback-avatar">
+        <ion-icon name="fas-graduation-cap" aria-hidden="true" class="course-icon-fallback" />
+    </ion-avatar>
 }

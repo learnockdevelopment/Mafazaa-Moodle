@@ -125,7 +125,8 @@ export default class CoreLoginSitePage implements OnInit {
             }
         }
 
-        this.showScanQR = CoreLoginHelper.displayQRInSiteScreen();
+        // QR code functionality disabled
+        this.showScanQR = false;
 
         this.siteForm = this.formBuilder.group({
             siteUrl: [url, this.moodleUrlValidator()],

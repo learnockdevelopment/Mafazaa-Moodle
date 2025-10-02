@@ -2,8 +2,7 @@
 Feature: Activities overview for glossary activity
 
   Background:
-    Given the Moodle site is compatible with this feature
-    And the following "users" exist:
+    Given the following "users" exist:
       | username | firstname | lastname |
       | student1 | Username  | 1        |
       | student2 | Username  | 2        |

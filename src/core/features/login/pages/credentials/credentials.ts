@@ -44,7 +44,6 @@ import { CoreLoadings } from '@services/overlays/loadings';
 import { CoreAlerts } from '@services/overlays/alerts';
 import { CoreLoginMethodsComponent } from '../../components/login-methods/login-methods';
 import { CoreLoginExceededAttemptsComponent } from '../../components/exceeded-attempts/exceeded-attempts';
-import { CoreSiteLogoComponent } from '../../../../components/site-logo/site-logo';
 import { CoreSharedModule } from '@/core/shared.module';
 
 /**
@@ -56,7 +55,6 @@ import { CoreSharedModule } from '@/core/shared.module';
     styleUrl: '../../login.scss',
     imports: [
         CoreSharedModule,
-        CoreSiteLogoComponent,
         CoreLoginExceededAttemptsComponent,
         CoreLoginMethodsComponent,
     ],
@@ -79,6 +77,7 @@ export default class CoreLoginCredentialsPage implements OnInit, OnDestroy {
     siteCheckError = '';
     displaySiteUrl = false;
     showLoginForm = true;
+    showPassword = false;
 
     protected siteCheck?: CoreSiteCheckResponse;
     protected eventThrown = false;
@@ -229,8 +228,6 @@ export default class CoreLoginCredentialsPage implements OnInit, OnDestroy {
             !!this.supportConfig?.canContactSupport(),
             this.showForgottenPassword,
         );
-        this.authInstructions = this.siteConfig.authinstructions ||
-            (this.canSignup ? Translate.instant('core.login.loginsteps') : '');
 
         if (!this.eventThrown && !this.viewLeft) {
             this.eventThrown = true;
@@ -364,6 +361,13 @@ export default class CoreLoginCredentialsPage implements OnInit, OnDestroy {
      */
     openSettings(): void {
         CoreNavigator.navigate('/settings');
+    }
+
+    /**
+     * Toggle password visibility.
+     */
+    togglePasswordVisibility(): void {
+        this.showPassword = !this.showPassword;
     }
 
     /**

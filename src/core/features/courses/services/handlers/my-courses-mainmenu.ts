@@ -31,7 +31,7 @@ import { CoreBlockDelegate } from '@features/block/services/block-delegate';
 export class CoreCoursesMyCoursesMainMenuHandlerService implements CoreMainMenuHandler {
 
     name = 'CoreCoursesMyCourses';
-    priority = 900;
+    priority = 1100; // Higher priority to make it default
 
     /**
      * @inheritdoc
@@ -75,10 +75,10 @@ export class CoreCoursesMyCoursesMainMenuHandlerService implements CoreMainMenuH
             userHomePage === CoreSiteInfoUserHomepage.HOMEPAGE_URL;
 
         return {
-            title: 'core.courses.mycourses',
+            title: 'core.mainmenu.home', // Use "Home" instead of "My Courses"
             page: CORE_COURSES_MYCOURSES_PAGE_NAME,
             class: 'core-courses-my-courses-handler',
-            icon: 'fas-graduation-cap',
+            icon: 'home-outline', // Use home icon instead of graduation cap
             priority: displayMyCourses ? this.priority + 200 : this.priority,
         };
     }

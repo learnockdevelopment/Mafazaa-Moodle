@@ -13,30 +13,35 @@
 // limitations under the License.
 
 import { AddonBlockMyOverviewComponent } from '@addons/block/myoverview/components/myoverview/myoverview';
-import { Component, effect, OnDestroy, OnInit, viewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { AsyncDirective } from '@classes/async-directive';
 import { PageLoadsManager } from '@classes/page-loads-manager';
 import { CorePromisedValue } from '@classes/promised-value';
-import { CoreBlockComponent } from '@features/block/components/block/block';
 import { CoreBlockDelegate } from '@features/block/services/block-delegate';
 import { CoreCourseBlock } from '@features/course/services/course';
 import { CoreCoursesDashboard } from '@features/courses/services/dashboard';
 import { CoreSites } from '@services/sites';
 import { CorePromiseUtils } from '@singletons/promise-utils';
 import { CoreEventObserver, CoreEvents } from '@singletons/events';
+import { CoreLang } from '@services/lang';
 import { Subscription } from 'rxjs';
-import { CoreCourses } from '../../services/courses';
 import { CoreTime } from '@singletons/time';
 import { CoreAnalytics, CoreAnalyticsEventType } from '@services/analytics';
 import { Translate } from '@singletons';
 import { CoreWait } from '@singletons/wait';
 import { CoreAlerts } from '@services/overlays/alerts';
 import { CoreSharedModule } from '@/core/shared.module';
-import { CoreSiteLogoComponent } from '../../../../components/site-logo/site-logo';
-import { CoreMainMenuUserButtonComponent } from '../../../mainmenu/components/user-menu-button/user-menu-button';
 import { CoreBlockSideBlocksButtonComponent } from '../../../block/components/side-blocks-button/side-blocks-button';
 import { CoreCoursesMyPageName } from '@features/courses/constants';
 import { ADDON_BLOCK_MYOVERVIEW_BLOCK_NAME } from '@addons/block/myoverview/constants';
+import { CoreUser } from '@features/user/services/user';
+import { CoreNavigator } from '@services/navigator';
+import { CoreModals } from '@services/overlays/modals';
+import { CoreCourses } from '@features/courses/services/courses';
+import { CoreEnrolledCourseDataWithExtraInfo, CoreCoursesHelper, CoreCourseSearchedDataWithExtraInfoAndOptions } from '@features/courses/services/courses-helper';
+import { CoreCourseSearchedData } from '@features/courses/services/courses';
+import { CoreCourseHelper } from '@features/course/services/course-helper';
+import { CoreMainMenuUserButtonComponent } from '@features/mainmenu/components/user-menu-button/user-menu-button';
 
 /**
  * Page that shows a my courses.
@@ -51,15 +56,12 @@ import { ADDON_BLOCK_MYOVERVIEW_BLOCK_NAME } from '@addons/block/myoverview/cons
         }],
     imports: [
         CoreSharedModule,
-        CoreSiteLogoComponent,
-        CoreMainMenuUserButtonComponent,
-        CoreBlockComponent,
         CoreBlockSideBlocksButtonComponent,
+        CoreMainMenuUserButtonComponent,
     ],
 })
 export default class CoreCoursesMyPage implements OnInit, OnDestroy, AsyncDirective {
 
-    readonly block = viewChild(CoreBlockComponent);
 
     downloadCoursesEnabled = false;
     userId: number;
@@ -69,13 +71,29 @@ export default class CoreCoursesMyPage implements OnInit, OnDestroy, AsyncDirect
     myPageCourses = CoreCoursesMyPageName.COURSES;
     hasSideBlocks = false;
 
+    // User data for app bar
+    userFullName = '';
+    userFirstName = '';
+    userLastName = '';
+    userProfileImageUrl = '';
+
+    // Course data for vertical cards
+    courses: CoreCourseSearchedDataWithExtraInfoAndOptions[] = [];
+    allCourses: CoreCourseSearchedDataWithExtraInfoAndOptions[] = []; // Store original courses for search
+    coursesLoaded = false;
+    selectedStatus = 'all';
+    selectedCategory = 'all';
+    availableCategories: { id: number; name: string; count: number }[] = [];
+    searchTerm = '';
+    currentLang = 'ar';
+
     protected updateSiteObserver: CoreEventObserver;
     protected onReadyPromise = new CorePromisedValue<void>();
     protected loadsManagerSubscription: Subscription;
     protected logView: () => void;
     protected loadsManager = inject(PageLoadsManager);
 
-    constructor() {
+    constructor(private cdRef: ChangeDetectorRef) {
         // Refresh the enabled flags if site is updated.
         this.updateSiteObserver = CoreEvents.on(CoreEvents.SITE_UPDATED, async () => {
             this.downloadCoursesEnabled = !CoreCourses.isDownloadCoursesDisabledInSite();
@@ -88,14 +106,6 @@ export default class CoreCoursesMyPage implements OnInit, OnDestroy, AsyncDirect
             this.loadContent();
         });
 
-        effect(async () => {
-            const dynamicComponent = this.block()?.dynamicComponent();
-
-            if (dynamicComponent) {
-                await dynamicComponent.ready();
-                this.myOverviewBlock = dynamicComponent.instance;
-            }
-        });
 
         this.logView = CoreTime.once(async () => {
             await CorePromiseUtils.ignoreErrors(CoreCourses.logView('my'));
@@ -118,7 +128,86 @@ export default class CoreCoursesMyPage implements OnInit, OnDestroy, AsyncDirect
 
         CoreSites.loginNavigationFinished();
 
+        // Get current language
+        this.loadCurrentLanguage();
+
+        // Listen for language changes
+        CoreEvents.on(CoreEvents.LANGUAGE_CHANGED, () => {
+            console.log('Language change event detected');
+            this.loadCurrentLanguage();
+            // Force translation update
+            setTimeout(() => {
+                this.cdRef.detectChanges();
+            }, 200);
+        });
+
+        // Also listen for site updates which might include language changes
+        CoreEvents.on(CoreEvents.SITE_UPDATED, () => {
+            console.log('Site updated event detected');
+            this.loadCurrentLanguage();
+        });
+
+        // Periodic check for language changes (fallback)
+        setInterval(() => {
+            this.checkLanguageChange();
+        }, 1000);
+
+        // Load user data for app bar
+        await this.loadUserData();
+
+        // Load course data for vertical cards
+        await this.loadCourses();
+
         this.loadContent(true);
+    }
+
+    /**
+     * Load current language
+     */
+    private async loadCurrentLanguage(): Promise<void> {
+        try {
+            this.currentLang = await CoreLang.getCurrentLanguage();
+
+            // Force change detection to update translations
+            setTimeout(() => {
+                // Trigger change detection for translations
+                this.cdRef.detectChanges();
+            }, 100);
+        } catch (error) {
+            console.warn('Failed to load current language:', error);
+            this.currentLang = 'ar'; // Fallback to Arabic
+        }
+    }
+
+    /**
+     * Check for language changes
+     */
+    private async checkLanguageChange(): Promise<void> {
+        try {
+            const newLang = await CoreLang.getCurrentLanguage();
+            if (newLang !== this.currentLang) {
+                console.log('Language changed from', this.currentLang, 'to', newLang);
+                this.currentLang = newLang;
+                // Force translation update
+                setTimeout(() => {
+                    this.cdRef.detectChanges();
+                }, 100);
+            }
+        } catch (error) {
+            // Ignore errors in periodic check
+        }
+    }
+
+    /**
+     * Manual language change for testing
+     */
+    toggleLanguage(): void {
+        this.currentLang = this.currentLang === 'ar' ? 'en' : 'ar';
+        console.log('Manual language toggle to:', this.currentLang);
+        // Force translation update
+        setTimeout(() => {
+            this.cdRef.detectChanges();
+        }, 100);
     }
 
     /**
@@ -219,6 +308,355 @@ export default class CoreCoursesMyPage implements OnInit, OnDestroy, AsyncDirect
      */
     async ready(): Promise<void> {
         return await this.onReadyPromise;
+    }
+
+    /**
+     * Load user data for app bar
+     */
+    private async loadUserData(): Promise<void> {
+        try {
+            const site = CoreSites.getRequiredCurrentSite();
+            const userInfo = site.getInfo();
+
+            if (userInfo) {
+                this.userFullName = userInfo.fullname || '';
+                this.userFirstName = userInfo.firstname || '';
+                this.userLastName = userInfo.lastname || '';
+
+                // Get user profile image
+                if (this.userId) {
+                    try {
+                        const userData = await CoreUser.getProfile(this.userId, undefined, false, site.getId());
+                        this.userProfileImageUrl = userData.profileimageurl || '';
+
+                        // If no profile image, try to get user avatar from site info
+                        if (!this.userProfileImageUrl && userInfo.userpictureurl) {
+                            this.userProfileImageUrl = userInfo.userpictureurl;
+                        }
+                    } catch (error) {
+                        console.warn('Failed to load user profile image:', error);
+                        // Try to get user avatar from site info as fallback
+                        if (userInfo.userpictureurl) {
+                            this.userProfileImageUrl = userInfo.userpictureurl;
+                        } else {
+                            this.userProfileImageUrl = '';
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.warn('Failed to load user data:', error);
+            // Set default values if loading fails
+            this.userFullName = 'User';
+            this.userProfileImageUrl = '';
+        }
+    }
+
+    /**
+     * Handle avatar click to open main menu drawer
+     */
+    async onAvatarClick(): Promise<void> {
+        const { CoreMainMenuUserMenuComponent } = await import('@features/mainmenu/components/user-menu/user-menu');
+
+        CoreModals.openSideModal<void>({
+            component: CoreMainMenuUserMenuComponent,
+        });
+    }
+
+    /**
+     * Handle notification click
+     */
+    onNotificationClick(): void {
+        CoreNavigator.navigate('/main/notifications');
+    }
+
+    /**
+     * Load courses for vertical cards
+     */
+    private async loadCourses(): Promise<void> {
+        try {
+            // Get all courses with full details including contacts and images
+            const allCourses = await CoreCourses.getCoursesByField();
+
+            // Filter out non-course items like "Elassr Academy" and cast to proper type
+            const filteredCourses = allCourses.filter(course => {
+                // Filter out items that are not real courses
+                const courseName = course.fullname?.toLowerCase() || '';
+                return !courseName.includes('elassr academy') &&
+                       !courseName.includes('academy') &&
+                       course.id > 0; // Ensure it has a valid course ID
+            }) as CoreCourseSearchedDataWithExtraInfoAndOptions[];
+
+            // Ensure course images are loaded
+            await this.loadCourseImages(filteredCourses);
+
+            // Force set some test images for debugging
+            if (filteredCourses.length > 0) {
+                filteredCourses.forEach((course, index) => {
+                    if (!course.courseimage) {
+                        // Set a test image URL for debugging
+                        course.courseimage = `https://picsum.photos/300/200?random=${course.id}`;
+                    }
+                });
+            }
+
+            this.courses = filteredCourses;
+            this.allCourses = filteredCourses; // Store original courses for search
+
+            // Extract categories from courses
+            this.extractCategories(filteredCourses);
+
+            this.coursesLoaded = true;
+
+            // Force change detection to ensure images are rendered
+            this.cdRef.detectChanges();
+        } catch (error) {
+            console.error('Error loading courses:', error);
+            this.courses = [];
+            this.allCourses = [];
+            this.availableCategories = [];
+            this.coursesLoaded = true;
+        }
+    }
+
+    /**
+     * Open course details
+     */
+    openCourse(course: CoreCourseSearchedDataWithExtraInfoAndOptions): void {
+        // For now, try to open the course directly
+        // The CoreCourseHelper will handle enrollment checking
+        CoreCourseHelper.openCourse(course, { params: { isGuest: false } });
+    }
+
+    /**
+     * Handle search input
+     */
+    onSearch(event: any): void {
+        this.searchTerm = event.target.value.toLowerCase().trim();
+
+        if (this.searchTerm === '') {
+            // If search is empty, return to normal filtered view
+            this.applyFilters();
+        } else {
+            // If there's search text, override all filters and show only search results
+            this.courses = this.allCourses.filter(course => {
+                const courseName = course.fullname?.toLowerCase() || '';
+                const courseSummary = course.summary?.toLowerCase() || '';
+                const instructorName = this.getCourseInstructor(course).toLowerCase();
+
+                return courseName.includes(this.searchTerm) ||
+                       courseSummary.includes(this.searchTerm) ||
+                       instructorName.includes(this.searchTerm);
+            });
+        }
+    }
+
+    /**
+     * Handle view all button click
+     */
+    onViewAll(): void {
+        // Show all courses in current filter (remove any search term)
+        this.courses = [...this.allCourses];
+        this.applyFilters();
+    }
+
+    /**
+     * Get course instructor from contacts
+     */
+    getCourseInstructor(course: CoreCourseSearchedDataWithExtraInfoAndOptions): string {
+        if (course.contacts && course.contacts.length > 0) {
+            return course.contacts[0].fullname;
+        }
+        return ''; // No fallback - show empty if no instructor
+    }
+
+    /**
+     * Get course duration from start and end dates
+     */
+    getCourseDuration(course: CoreCourseSearchedDataWithExtraInfoAndOptions): string {
+        if (course.startdate && course.enddate) {
+            const startDate = new Date(course.startdate * 1000);
+            const endDate = new Date(course.enddate * 1000);
+            const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return `${diffDays} يوم`; // Days
+        }
+        return '16 ساعة'; // Fallback
+    }
+
+    /**
+     * Get course rating (mock for now, could be enhanced with real rating system)
+     */
+    getCourseRating(course: CoreCourseSearchedDataWithExtraInfoAndOptions): number[] {
+        // Mock rating based on course ID for consistency
+        const rating = (course.id % 5) + 1; // 1-5 stars
+        return Array(5).fill(0).map((_, i) => i < rating ? 1 : 0);
+    }
+
+
+    /**
+     * Filter courses by status
+     */
+    filterByStatus(status: string): void {
+        this.selectedStatus = status;
+        this.applyFilters();
+    }
+
+    /**
+     * Filter courses by category
+     */
+    filterByCategory(category: string): void {
+        this.selectedCategory = category;
+        this.applyFilters();
+    }
+
+    /**
+     * Apply current filters to courses
+     */
+    private applyFilters(): void {
+        let filteredCourses = [...this.allCourses];
+
+        // Apply status filter first
+        if (this.selectedStatus === 'popular') {
+            // Sort by mock rating (higher rating = more popular)
+            filteredCourses = filteredCourses.sort((a, b) => {
+                const ratingA = (a.id % 5) + 1;
+                const ratingB = (b.id % 5) + 1;
+                return ratingB - ratingA;
+            });
+        } else if (this.selectedStatus === 'upcoming') {
+            // Filter courses that start in the future
+            filteredCourses = filteredCourses.filter(course => {
+                if (course.startdate) {
+                    const startDate = new Date(course.startdate * 1000);
+                    return startDate > new Date();
+                }
+                return false;
+            });
+        } else if (this.selectedStatus === 'ended') {
+            // Filter courses that have ended
+            filteredCourses = filteredCourses.filter(course => {
+                if (course.enddate) {
+                    const endDate = new Date(course.enddate * 1000);
+                    return endDate < new Date();
+                }
+                return false;
+            });
+        }
+
+        // Apply category filter
+        if (this.selectedCategory !== 'all') {
+            const categoryId = parseInt(this.selectedCategory);
+            filteredCourses = filteredCourses.filter(course => course.categoryid === categoryId);
+        }
+
+        this.courses = filteredCourses;
+    }
+
+    /**
+     * Get category title for display
+     */
+    getCategoryTitle(): string {
+        // If searching, show search results title
+        if (this.searchTerm) {
+            return 'core.home.search_results';
+        }
+
+        if (this.selectedStatus === 'popular') {
+            return 'core.home.popular_courses';
+        } else if (this.selectedStatus === 'upcoming') {
+            return 'core.home.upcoming_courses';
+        } else if (this.selectedStatus === 'ended') {
+            return 'core.home.ended_courses';
+        } else if (this.selectedCategory !== 'all') {
+            // It's a category ID
+            const category = this.availableCategories.find(cat => cat.id.toString() === this.selectedCategory);
+            return category ? category.name : 'core.home.all_courses';
+        } else {
+            return 'core.home.all_courses';
+        }
+    }
+
+    /**
+     * Extract categories from courses
+     */
+    private extractCategories(courses: CoreCourseSearchedDataWithExtraInfoAndOptions[]): void {
+        const categoryMap = new Map<number, { name: string; count: number }>();
+
+        courses.forEach(course => {
+            if (course.categoryid && course.categoryname) {
+                if (categoryMap.has(course.categoryid)) {
+                    categoryMap.get(course.categoryid)!.count++;
+                } else {
+                    categoryMap.set(course.categoryid, {
+                        name: course.categoryname,
+                        count: 1
+                    });
+                }
+            }
+        });
+
+        // Convert to array and sort by count (most courses first)
+        this.availableCategories = Array.from(categoryMap.entries())
+            .map(([id, data]) => ({ id, ...data }))
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 10); // Limit to top 10 categories
+    }
+
+    /**
+     * Check if a category is selected
+     */
+    isCategorySelected(categoryId: string): boolean {
+        return this.selectedCategory === categoryId;
+    }
+
+    /**
+     * Load course images for all courses
+     */
+    private async loadCourseImages(courses: CoreCourseSearchedDataWithExtraInfoAndOptions[]): Promise<void> {
+        try {
+            // Process each course to ensure image data is available
+            for (const course of courses) {
+                try {
+                    // First check if courseimage is already set
+                    if (course.courseimage) {
+                        continue;
+                    }
+
+                    // Check if course has overviewfiles and set courseimage
+                    if (course.overviewfiles && course.overviewfiles.length > 0) {
+                        const imageUrl = course.overviewfiles[0].fileurl;
+                        if (imageUrl) {
+                            course.courseimage = imageUrl;
+                            continue;
+                        }
+                    }
+
+                    // If no courseimage, set a fallback color
+                    try {
+                        const colors = await CoreCoursesHelper.getCourseSiteColors();
+                        const colorNumber = course.id % 10;
+                        course.colorNumber = colorNumber;
+                        course.color = colors.length ? colors[colorNumber] : undefined;
+                    } catch (colorError) {
+                        // Set a default color
+                        course.colorNumber = course.id % 10;
+                        course.color = '#8B4513';
+                    }
+                } catch (error) {
+                    // Set a default color on error
+                    course.colorNumber = course.id % 10;
+                    course.color = '#8B4513';
+                }
+            }
+
+        } catch (error) {
+            // Set default colors for all courses on error
+            courses.forEach(course => {
+                course.colorNumber = course.id % 10;
+                course.color = '#8B4513';
+            });
+        }
     }
 
 }

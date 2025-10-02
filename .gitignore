@@ -68,7 +68,7 @@ circular-dependencies
 .DS_Store
 Thumbs.db
 
-# Moodle App
+# Mafaza
 /src/assets/lib
 /src/assets/lang/*
 /src/assets/env.json

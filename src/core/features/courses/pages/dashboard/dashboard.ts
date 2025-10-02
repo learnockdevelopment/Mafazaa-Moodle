@@ -37,6 +37,7 @@ import { CORE_BLOCKS_DASHBOARD_FALLBACK_BLOCKS } from '@features/block/constants
 @Component({
     selector: 'page-core-courses-dashboard',
     templateUrl: 'dashboard.html',
+    styleUrl: 'dashboard.scss',
     imports: [
         CoreSharedModule,
         CoreBlockComponent,
@@ -175,6 +176,44 @@ export default class CoreCoursesDashboardPage implements OnInit, OnDestroy {
      */
     async openSearch(): Promise<void> {
         CoreNavigator.navigateToSitePath('/courses/list', { params : { mode: 'search' } });
+    }
+
+    /**
+     * Get total number of courses.
+     */
+    getTotalCourses(): number {
+        // This would typically come from a service or be calculated
+        return 12;
+    }
+
+    /**
+     * Get number of completed courses.
+     */
+    getCompletedCourses(): number {
+        // This would typically come from a service or be calculated
+        return 8;
+    }
+
+    /**
+     * Get number of courses in progress.
+     */
+    getInProgressCourses(): number {
+        // This would typically come from a service or be calculated
+        return 4;
+    }
+
+    /**
+     * Open all courses page.
+     */
+    openAllCourses(): void {
+        CoreNavigator.navigateToSitePath('/courses');
+    }
+
+    /**
+     * Open notifications page.
+     */
+    openNotifications(): void {
+        CoreNavigator.navigateToSitePath('/notifications');
     }
 
     /**

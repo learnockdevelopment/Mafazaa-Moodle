@@ -27,6 +27,7 @@ import { CoreViewer } from '@features/viewer/services/viewer';
 import { CoreSharedModule } from '@/core/shared.module';
 import { CoreMainMenuUserButtonComponent } from '../../components/user-menu-button/user-menu-button';
 import { CoreContentLinksHelper } from '@features/contentlinks/services/contentlinks-helper';
+import { CoreLang } from '@services/lang';
 
 /**
  * Page that displays the more page of the app.
@@ -46,6 +47,7 @@ export default class CoreMainMenuMorePage implements OnInit, OnDestroy {
     handlersLoaded = false;
     showScanQR: boolean;
     customItems?: CoreMainMenuCustomItem[];
+    currentLang = 'ar';
 
     protected allHandlers?: CoreMainMenuHandlerData[];
     protected subscription!: Subscription;
@@ -79,6 +81,14 @@ export default class CoreMainMenuMorePage implements OnInit, OnDestroy {
 
         this.resizeListener = CoreDom.onWindowResize(() => {
             this.initHandlers();
+        });
+
+        // Load current language
+        this.loadCurrentLanguage();
+
+        // Listen for language changes
+        CoreEvents.on(CoreEvents.LANGUAGE_CHANGED, () => {
+            this.loadCurrentLanguage();
         });
 
         CoreSites.loginNavigationFinished();
@@ -169,6 +179,18 @@ export default class CoreMainMenuMorePage implements OnInit, OnDestroy {
             CoreViewer.viewText(Translate.instant('core.qrscanner'), text, {
                 displayCopyButton: true,
             });
+        }
+    }
+
+    /**
+     * Load current language
+     */
+    private async loadCurrentLanguage(): Promise<void> {
+        try {
+            this.currentLang = await CoreLang.getCurrentLanguage();
+        } catch (error) {
+            console.warn('Failed to load current language:', error);
+            this.currentLang = 'ar';
         }
     }
 

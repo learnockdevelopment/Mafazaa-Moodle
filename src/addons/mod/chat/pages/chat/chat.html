@@ -3,11 +3,6 @@
         <ion-buttons slot="start">
             <ion-back-button [text]="'core.back' | translate" />
         </ion-buttons>
-        <ion-title>
-            <h1>
-                <core-format-text [text]="title" contextLevel="module" [contextInstanceId]="cmId" [courseId]="courseId" />
-            </h1>
-        </ion-title>
         <ion-buttons slot="end">
             @if (loaded) {
                 <ion-button fill="clear" (click)="showChatUsers()" [ariaLabel]="'core.users' | translate">
@@ -17,7 +12,15 @@
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
-<ion-content>
+
+<ion-content class="chat-content">
+    <!-- Chat Header -->
+    <div class="chat-header">
+        <h1 class="chat-title">
+            <core-format-text [text]="title" contextLevel="module" [contextInstanceId]="cmId" [courseId]="courseId" />
+        </h1>
+        <p class="chat-subtitle">{{ 'addon.mod_chat.chat_subtitle' | translate }}</p>
+    </div>
     <core-loading [hideUntil]="loaded">
         <ion-list class="addon-messages-discussion-container" aria-live="polite">
             <ng-container *ngFor="let message of messages; index as index; last as last">

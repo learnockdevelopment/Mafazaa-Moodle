@@ -17,7 +17,10 @@ import { Routes } from '@angular/router';
 
 import { AppRoutingModule, conditionalRoutes } from '@/app/app-routing.module';
 import { CoreMainMenuTabRoutingModule } from '@features/mainmenu/mainmenu-tab-routing.module';
+import { CoreMainMenuRoutingModule } from '@features/mainmenu/mainmenu-routing.module';
+import { CoreMainMenuDelegate } from '@features/mainmenu/services/mainmenu-delegate';
 import { CoreSettingsHelper } from './services/settings-helper';
+import { CoreSettingsMainMenuHandler } from './services/settings-mainmenu-handler';
 import { SHAREDFILES_PAGE_NAME } from '@features/sharedfiles/constants';
 import { getSharedFilesRoutes } from '@features/sharedfiles/sharedfiles.module';
 import { CoreScreen } from '@services/screen';
@@ -111,6 +114,13 @@ const appRoutes: Routes = [
     },
 ];
 
+const mainMenuRoutes: Routes = [
+    {
+        path: 'settings',
+        loadChildren: () => settingsRoutes,
+    },
+];
+
 const mainMenuMoreRoutes: Routes = [
     {
         path: 'settings',
@@ -125,10 +135,14 @@ const mainMenuMoreRoutes: Routes = [
 @NgModule({
     imports: [
         AppRoutingModule.forChild(appRoutes),
+        CoreMainMenuRoutingModule.forChild({ children: mainMenuRoutes }),
         CoreMainMenuTabRoutingModule.forChild(mainMenuMoreRoutes),
     ],
     providers: [
-        provideAppInitializer(() => CoreSettingsHelper.initialize()),
+        provideAppInitializer(() => {
+            CoreMainMenuDelegate.registerHandler(CoreSettingsMainMenuHandler.instance);
+            CoreSettingsHelper.initialize();
+        }),
     ],
 })
 export class CoreSettingsModule {}

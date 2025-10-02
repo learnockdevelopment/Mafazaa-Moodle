@@ -42,7 +42,6 @@ import {
     CoreMainMenuPlacement,
 } from '@features/mainmenu/constants';
 import { CoreSharedModule } from '@/core/shared.module';
-import { CoreMainMenuUserButtonComponent } from '../../components/user-menu-button/user-menu-button';
 import { BackButtonPriority } from '@/core/constants';
 import { CoreKeyboard } from '@singletons/keyboard';
 
@@ -77,7 +76,6 @@ const ANIMATION_DURATION = 500;
     styleUrl: 'menu.scss',
     imports: [
         CoreSharedModule,
-        CoreMainMenuUserButtonComponent,
     ],
 })
 export default class CoreMainMenuPage implements OnInit, OnDestroy {
@@ -184,9 +182,12 @@ export default class CoreMainMenuPage implements OnInit, OnDestroy {
 
         this.loadingTabsLength = this.getLoadingTabsLength();
 
+        // Define the specific 4 main items we want to show (settings is handled separately)
+        const allowedPages = ['home', 'courses', 'calendar', 'messages'];
+
         const handlers = this.allHandlers
-            .filter((handler) => !handler.onlyInMore)
-            .slice(0, CoreMainMenu.getNumItems()); // Get main handlers.
+            .filter((handler) => !handler.onlyInMore && allowedPages.includes(handler.page))
+            .slice(0, 4); // Get first 4 main handlers (settings is separate)
 
         // Re-build the list of tabs. If a handler is already in the list, use existing object to prevent re-creating the tab.
         const newTabs: CoreMainMenuHandlerToDisplay[] = [];
@@ -225,7 +226,7 @@ export default class CoreMainMenuPage implements OnInit, OnDestroy {
             // No tab selected or handler no longer available, select the first one.
             await CoreWait.nextTick();
 
-            const tabPage = this.tabs[0] ? this.tabs[0].page : this.morePageName;
+            const tabPage = this.tabs[0] ? this.tabs[0].page : 'settings';
             const tabPageParams = this.tabs[0] ? this.tabs[0].pageParams : {};
             this.logger.debug(`Select first tab: ${tabPage}.`, this.tabs);
 
@@ -244,7 +245,7 @@ export default class CoreMainMenuPage implements OnInit, OnDestroy {
      */
     protected getLoadingTabsLength(): number {
         return CoreMainMenu.getNumItems() +
-            (this.tabsPlacement === CoreMainMenuPlacement.BOTTOM ? 1 : 2); // +1 for the "More" tab and user button.
+            (this.tabsPlacement === CoreMainMenuPlacement.BOTTOM ? 1 : 2); // +1 for the settings button and user button.
     }
 
     /**
@@ -317,21 +318,23 @@ export default class CoreMainMenuPage implements OnInit, OnDestroy {
         this.selectedTab = event.tab;
         this.firstSelectedTab = this.firstSelectedTab ?? event.tab;
         this.selectHistory.push(event.tab);
+
+        // Update visibility when tab changes (especially for settings)
+        this.updateVisibility();
     }
 
     /**
      * Update menu visibility.
      */
     protected updateVisibility(): void {
-        const visibility = this.tabsPlacement === CoreMainMenuPlacement.SIDE
-            ? ''
-            : (this.isMainScreen ? 'visible' : 'hidden');
-
+        // Always use bottom menu logic, but keep visible when settings is selected
+        const isSettingsTab = this.selectedTab === 'settings';
+        const visibility = (this.isMainScreen || isSettingsTab) ? 'visible' : 'hidden';
         if (visibility === this.visibility) {
             return;
         }
-
         this.visibility = visibility;
+
         this.notifyVisibilityUpdated();
     }
 
@@ -412,9 +415,10 @@ class CoreMainMenuRoleTab extends CoreAriaRoleTab<CoreMainMenuPage> {
                 findIndex: tab.page,
             }));
 
+        // Add settings tab
         allTabs.push({
-            id: this.componentInstance.morePageName,
-            findIndex: this.componentInstance.morePageName,
+            id: 'settings',
+            findIndex: 'settings',
         });
 
         return allTabs;

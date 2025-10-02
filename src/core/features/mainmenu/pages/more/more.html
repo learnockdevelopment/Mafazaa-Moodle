@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header [dir]="currentLang === 'ar' ? 'rtl' : 'ltr'">
     <ion-toolbar>
         <ion-buttons slot="start">
             <ion-back-button [text]="'core.back' | translate" />
@@ -13,7 +13,7 @@
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
-<ion-content>
+<ion-content [dir]="currentLang === 'ar' ? 'rtl' : 'ltr'">
     <ion-list>
         @if ((!handlers || !handlers.length) && !handlersLoaded) {
             <ion-item class="ion-text-center">

@@ -1,0 +1,76 @@
+@use "theme/globals" as *;
+
+// Ensure the calendar page content is scrollable
+ion-content {
+    --background: var(--ion-background-color);
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &::part(scroll) {
+        overflow-y: auto;
+        overflow-x: hidden;
+        height: 100%;
+        padding-bottom: 20px;
+    }
+}
+
+// Ensure calendar component doesn't restrict scrolling
+addon-calendar-calendar {
+    display: block;
+    overflow: visible;
+    height: auto;
+    min-height: auto;
+    width: 100%;
+
+    // Override swiper container height restrictions
+    swiper-container {
+        height: auto !important;
+        max-height: none !important;
+        min-height: auto !important;
+
+        &::part(container) {
+            height: auto !important;
+            max-height: none !important;
+            overflow: visible !important;
+        }
+
+        &::part(wrapper) {
+            height: auto !important;
+            max-height: none !important;
+        }
+    }
+
+    swiper-slide {
+        height: auto !important;
+        max-height: none !important;
+        min-height: auto !important;
+        display: block !important;
+        overflow: visible !important;
+    }
+}
+
+// Ensure upcoming events component is also scrollable
+addon-calendar-upcoming-events {
+    display: block;
+    overflow: visible;
+    height: auto;
+    min-height: auto;
+    width: 100%;
+}
+
+// Fix any potential height restrictions on the main container
+.calendar-page-container {
+    min-height: 100vh;
+    overflow: visible;
+}
+
+// Ensure proper spacing and scrolling for the warning card
+.core-warning-card {
+    margin: 16px;
+    overflow: visible;
+}
+
+// Make sure the FAB doesn't interfere with scrolling
+ion-fab {
+    z-index: 999;
+}
