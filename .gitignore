@@ -70,7 +70,6 @@ Thumbs.db
 
 # Mafaza
 /src/assets/lib
-/src/assets/lang/*
 /src/assets/env.json
 /src/assets/fonts/icons.json
 
