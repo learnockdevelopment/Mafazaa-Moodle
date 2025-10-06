@@ -104,21 +104,31 @@
 
     --ion-placeholder-color: var(--subdued-text-color);
 
-    --core-bottom-tabs-background: var(--white);
-    --core-bottom-tabs-color: var(--ion-text-color-step-400);
-    --core-bottom-tabs-color-selected: var(--dark);
-    --core-bottom-tabs-background-selected: transparent;
+    --core-bottom-tabs-background: var(--primary);
+    --core-bottom-tabs-color: var(--primary-contrast);
+    --core-bottom-tabs-color-selected: var(--primary-contrast);
+    --core-bottom-tabs-background-selected: color-mix(in srgb, var(--primary) 90%, transparent);
     --core-bottom-tabs-badge-color: var(--primary);
     --core-bottom-tabs-badge-text-color: var(--primary-contrast);
     --core-bottom-tabs-border-color-active: var(--primary);
 
+    --core-side-tabs-background: var(--primary);
+    --core-side-tabs-color: var(--primary-contrast);
+    --core-side-tabs-color-selected: var(--primary-contrast);
+    --core-side-tabs-background-selected: color-mix(in srgb, var(--primary) 90%, transparent);
+    --core-side-tabs-badge-color: var(--primary);
+    --core-side-tabs-badge-text-color: var(--primary-contrast);
+    --core-side-tabs-border-color-active: var(--primary);
+
     --core-link-color: var(--info);
 
-    --core-header-toolbar-background: var(--white);
+    --core-header-toolbar-background: var(--primary);
+    --core-header-toolbar-color: var(--primary-contrast);
+    --core-header-buttons-color: var(--primary-contrast);
+    --ion-toolbar-color: var(--primary-contrast);
+    --ion-toolbar-background: var(--primary);
     --core-header-toolbar-border-color: var(--stroke);
-    --core-header-toolbar-color: var(--text-color);
     --core-header-buttons-background: transparent;
-    --core-header-buttons-color: var(--core-header-toolbar-color);
 
     --core-footer-gray-background: var(--gray-300);
     --core-footer-gray-border: var(--gray-500);

@@ -17,59 +17,9 @@
             <div class="dashboard-content">
                 <h1 class="dashboard-title">{{ 'core.courses.mymoodle' | translate }}</h1>
                 <p class="dashboard-subtitle">{{ 'core.courses.dashboard_subtitle' | translate }}</p>
-
-                <!-- Dashboard Stats -->
-                <div class="dashboard-stats">
-                    <div class="stat-card">
-                        <div class="stat-number">{{ getTotalCourses() }}</div>
-                        <div class="stat-label">{{ 'core.courses.total_courses' | translate }}</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">{{ getCompletedCourses() }}</div>
-                        <div class="stat-label">{{ 'core.courses.completed' | translate }}</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">{{ getInProgressCourses() }}</div>
-                        <div class="stat-label">{{ 'core.courses.in_progress' | translate }}</div>
-                    </div>
-                </div>
             </div>
         </div>
 
-
-        <!-- Dashboard Cards -->
-        <div class="dashboard-content-section">
-            <div class="dashboard-cards">
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <div class="card-icon">
-                            <ion-icon name="fas-graduation-cap"></ion-icon>
-                        </div>
-                    </div>
-                    <p class="card-content">{{ 'core.courses.my_courses_description' | translate }}</p>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <div class="card-icon">
-                            <ion-icon name="fas-calendar-alt"></ion-icon>
-                        </div>
-                    </div>
-                    <p class="card-content">{{ 'core.courses.upcoming_events_description' | translate }}</p>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <div class="card-icon">
-                            <ion-icon name="fas-chart-line"></ion-icon>
-                        </div>
-                    </div>
-                    <p class="card-content">{{ 'core.courses.progress_description' | translate }}</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Dashboard Blocks -->
         @if (hasMainBlocks) {
             <div class="dashboard-content-section">
                 <div class="section-header">

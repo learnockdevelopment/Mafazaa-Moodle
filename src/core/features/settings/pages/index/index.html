@@ -15,7 +15,7 @@
                 <ion-item *ngFor="let section of sections.items" [attr.aria-current]="sections.getItemAriaCurrent(section)"
                     button [detail]="true" (click)="sections.select(section)" class="settings-item">
                     <div class="settings-item-content">
-                        <div class="settings-item-icon">
+                        <div class="settings-item-icon" style="margin-inline-end: 8px;">
                             <ion-icon [name]="section.icon" aria-hidden="true" />
                         </div>
                         <div class="settings-item-text">

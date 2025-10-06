@@ -56,11 +56,12 @@
 
     /* Calendar Header Styles */
     .calendar-header {
-        background: linear-gradient(135deg, $brand-color 0%, #5D2E0A 100%);
+        background: $brand-color;
         padding: 20px 16px;
         margin-bottom: 16px;
         border-radius: 0 0 24px 24px;
         box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        text-align: center;
         position: relative;
         overflow: hidden;
 
@@ -84,6 +85,7 @@
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         position: relative;
         z-index: 1;
+        text-align: center;
     }
 
     .calendar-subtitle {
@@ -92,6 +94,7 @@
         margin: 0;
         font-weight: 400;
         position: relative;
+        text-align: center;
         z-index: 1;
     }
 
@@ -327,11 +330,11 @@
 /* RTL Support */
 [dir="rtl"] {
     .calendar-title {
-        text-align: right;
+        text-align: center;
     }
 
     .calendar-subtitle {
-        text-align: right;
+        text-align: center;
     }
 
     .addon-calendar-day {

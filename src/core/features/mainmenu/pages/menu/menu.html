@@ -1,7 +1,7 @@
     <ion-tabs #mainTabs [hidden]="!showTabs" [class]="'placement-' + tabsPlacement"
     [class.tabshidden]="!isMainScreen && tabsPlacement === 'bottom'"
     (ionTabsDidChange)="tabChanged($event)">
-    <ion-tab-bar slot="bottom" class="mainmenu-tabs" [@menuVisibilityAnimation]="visibility">
+    <ion-tab-bar slot="bottom" class="mainmenu-tabs" [@menuVisibilityAnimation]="visibility" [dir]="currentLang === 'ar' ? 'rtl' : 'ltr'">
         <core-loading [hideUntil]="loaded" [placeholderType]="'rowwrap'"
             [placeholderLimit]="loadingTabsLength" />
 

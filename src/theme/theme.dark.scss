@@ -92,8 +92,16 @@
         }
 
         --core-bottom-tabs-badge-text-color: var(--primary-contrast);
-        --core-bottom-tabs-background: var(--gray-900);
-        --core-bottom-tabs-color: var(--gray-200);
+        --core-bottom-tabs-background: var(--primary-dark);
+        --core-bottom-tabs-color: var(--primary-contrast);
+
+        --core-side-tabs-background: var(--primary-dark);
+        --core-side-tabs-color: var(--primary-contrast);
+        --core-side-tabs-color-selected: var(--primary-contrast);
+        --core-side-tabs-background-selected: color-mix(in srgb, var(--primary-dark) 90%, transparent);
+        --core-side-tabs-badge-color: var(--primary-dark);
+        --core-side-tabs-badge-text-color: var(--primary-contrast);
+        --core-side-tabs-border-color-active: var(--primary-dark);
 
         ion-action-sheet {
             .action-sheet-cancel {
@@ -110,8 +118,9 @@
 
         --core-link-color: var(--info-tint);
 
-        --core-header-toolbar-background:   var(--gray-900);
-        --core-header-toolbar-color:        var(--text-color);
+        --core-header-toolbar-background:   var(--primary-dark);
+        --core-header-toolbar-color: var(--primary-contrast);
+        --core-header-buttons-color: var(--primary-contrast);
         --core-header-toolbar-border-color: var(--stroke);
 
         --core-footer-gray-background: var(--gray-700);

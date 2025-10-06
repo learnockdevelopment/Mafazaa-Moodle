@@ -479,9 +479,18 @@ export default class CoreCoursesMyPage implements OnInit, OnDestroy, AsyncDirect
             const endDate = new Date(course.enddate * 1000);
             const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            return `${diffDays} يوم`; // Days
+
+            // Use translated time units
+            if (diffDays === 1) {
+                return `${diffDays} ${Translate.instant('core.day')}`;
+            } else {
+                return `${diffDays} ${Translate.instant('core.days')}`;
+            }
         }
-        return '16 ساعة'; // Fallback
+
+        // Fallback with translated hours
+        const fallbackHours = 16;
+        return `${fallbackHours} ${Translate.instant('core.hours')}`;
     }
 
     /**

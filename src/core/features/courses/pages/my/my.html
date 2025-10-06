@@ -48,7 +48,6 @@
                     [value]="selectedStatus"
                     (ionChange)="filterByStatus($event.detail.value)"
                     placeholder="{{ 'core.home.select_type' | translate }}">
-                    <ion-select-option value="all">{{ 'core.home.all_courses' | translate }}</ion-select-option>
                     <ion-select-option value="upcoming">{{ 'core.home.upcoming' | translate }}</ion-select-option>
                     <ion-select-option value="popular">{{ 'core.home.popular' | translate }}</ion-select-option>
                     <ion-select-option value="ended">{{ 'core.home.ended' | translate }}</ion-select-option>
@@ -60,7 +59,7 @@
                     [value]="selectedCategory"
                     (ionChange)="filterByCategory($event.detail.value)"
                     placeholder="{{ 'core.home.select_category' | translate }}">
-                    <ion-select-option value="all">{{ 'core.home.all_levels' | translate }}</ion-select-option>
+                    <ion-select-option value="all">{{ 'core.home.all_courses' | translate }}</ion-select-option>
                     @for (category of availableCategories; track category.id) {
                         <ion-select-option [value]="category.id.toString()">{{ category.name }}</ion-select-option>
                     }
@@ -70,7 +69,7 @@
 
         <!-- Course Section Header -->
         <div class="section-header">
-            <h3 class="section-title" style="text-align: right !important; direction: rtl !important;">{{ getCategoryTitle() | translate }}</h3>
+            <h3 class="section-title" [style.direction]="currentLang === 'en' ? 'rtl' : 'ltr'" [style.text-align]="currentLang === 'ar' ? 'right' : 'left'">{{ getCategoryTitle() | translate }}</h3>
         </div>
 
         <!-- Vertical Course Cards -->

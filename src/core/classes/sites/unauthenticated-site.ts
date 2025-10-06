@@ -294,6 +294,12 @@ export class CoreUnauthenticatedSite {
             siteUrl: this.siteUrl,
         };
 
+        // Enforce HTTPS to avoid mixed-content issues in web builds.
+        // If the configured site URL uses http, upgrade it to https for the public config request.
+        if (preSets.siteUrl?.startsWith('http://')) {
+            preSets.siteUrl = preSets.siteUrl.replace(/^http:\/\//i, 'https://');
+        }
+
         let config: CoreSitePublicConfigResponse;
 
         try {

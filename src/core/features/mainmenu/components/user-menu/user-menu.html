@@ -14,25 +14,20 @@
     <core-loading [hideUntil]="handlersLoaded" placeholderType="column" placeholderHeight="48px">
         <ion-list>
             @if (siteInfo) {
-                <!-- User Profile Card -->
+                <!-- User Profile Card (profile button removed as requested) -->
                 <div class="user-profile-card">
                     <div class="profile-header">
-                        <div class="profile-avatar">
+                        <div class="profile-avatar" (click)="openUserProfile($event)">
                             <core-user-avatar [site]="siteInfo" [userId]="siteInfo.userid" [linkProfile]="false" />
                         </div>
                         <div class="profile-info">
                             <h2 class="profile-name">{{ siteInfo.fullname }}</h2>
                         </div>
                     </div>
-                    <ion-button fill="outline" class="profile-btn" (click)="openUserProfile($event)">
-                        <ion-icon name="person-outline" slot="start"></ion-icon>
-                        {{ 'core.user.viewprofile' | translate }}
-                    </ion-button>
                 </div>
             }
 
             <div class="menu-section">
-                <h3 class="section-title">{{ 'core.mainmenu.menu' | translate }}</h3>
                 <ion-item button *ngFor="let handler of handlers" class="menu-item ion-text-wrap" (click)="handlerClicked($event, handler)"
                     [ngClass]="['core-user-menu-handler', handler.class || '']" [hidden]="handler.hidden"
                     [attr.aria-label]="handler.title | translate" [detail]="false">
@@ -67,7 +62,6 @@
             </div>
 
             <div class="menu-section">
-                <h3 class="section-title">{{ 'core.mainmenu.account' | translate }}</h3>
                 <ion-item button *ngFor="let handler of accountHandlers" class="menu-item ion-text-wrap"
                     (click)="handlerClicked($event, handler)"
                     [ngClass]="['core-user-account-menu-handler', handler.class || '']"

@@ -16,7 +16,7 @@ core-block ::ng-deep ion-card.addon-block-myoverview {
 
 /* Custom Header Styles */
 .custom-header {
-    --background: white;
+    --background: var(--primary);
     --border-width: 0;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     position: relative;
@@ -25,7 +25,8 @@ core-block ::ng-deep ion-card.addon-block-myoverview {
 }
 
 .custom-toolbar {
-    --background: white;
+    --background: var(--primary);
+    --color: var(--primary-contrast);
     --border-width: 0;
     --padding-start: 16px;
     --padding-end: 16px;
@@ -98,7 +99,7 @@ core-block ::ng-deep ion-card.addon-block-myoverview {
 }
 
 .notification-btn {
-    --color: #8B4513;
+    --color: var(--primary);
     --background: transparent;
     --border-radius: 8px;
     --padding: 8px;
@@ -125,7 +126,7 @@ core-block ::ng-deep ion-card.addon-block-myoverview {
 
 /* Text Banner */
 .text-banner {
-    background: linear-gradient(135deg, #D4A574, #C19A6B);
+    background: var(--primary);
     border-radius: 16px;
     padding: 32px 24px;
     margin: 16px 16px 24px 16px;
@@ -252,8 +253,8 @@ core-block ::ng-deep ion-card.addon-block-myoverview {
     }
 
     &.select-expanded {
-        --border-color: #8B4513;
-        box-shadow: 0 6px 20px rgba(139, 69, 19, 0.3);
+        --border-color: var(--primary);
+        box-shadow: 0 6px 20px rgba(32, 48, 84, 0.3);
     }
 
     ion-select {
@@ -278,11 +279,8 @@ core-block ::ng-deep ion-card.addon-block-myoverview {
 /* Section Header */
 .section-header {
     display: flex;
-    justify-content: flex-end;
     align-items: center;
     margin-bottom: 16px;
-    text-align: right !important;
-    direction: rtl !important;
 }
 
 .section-title {
@@ -290,80 +288,35 @@ core-block ::ng-deep ion-card.addon-block-myoverview {
     font-weight: 600;
     color: #333;
     margin: 0;
-    text-align: right !important;
-    direction: rtl !important;
 }
 
-/* Force RTL for section titles globally with maximum specificity */
-:host .section-title,
-:host-context([dir="rtl"]) .section-title,
-[dir="rtl"] .section-title,
-.section-header .section-title,
-h3.section-title,
-:host h3.section-title,
-:host-context([dir="rtl"]) h3.section-title,
-[dir="rtl"] h3.section-title {
-    text-align: right !important;
-    direction: rtl !important;
+/* RTL Support for section titles */
+[dir="rtl"] .section-header {
+    justify-content: flex-end;
+    text-align: right;
+    direction: rtl;
 }
 
-/* Ensure parent container doesn't override */
-.section-header {
-    text-align: right !important;
-    direction: rtl !important;
-    justify-content: flex-end !important;
-    align-items: flex-start !important;
+[dir="rtl"] .section-title {
+    text-align: right;
+    direction: rtl;
 }
 
-/* Additional aggressive overrides for section titles */
-:host ::ng-deep .section-title,
-:host ::ng-deep h3.section-title,
-:host ::ng-deep .section-header h3 {
-    text-align: right !important;
-    direction: rtl !important;
+/* LTR Support for section titles */
+[dir="ltr"] .section-header {
+    justify-content: flex-start;
+    text-align: left;
+    direction: ltr;
 }
 
-/* Force RTL on the entire page for section titles */
-:host[dir="rtl"] .section-title,
-:host[dir="rtl"] h3.section-title,
-:host[dir="rtl"] .section-header h3 {
-    text-align: right !important;
-    direction: rtl !important;
+[dir="ltr"] .section-title {
+    text-align: left;
+    direction: ltr;
 }
 
-/* Ensure section title is positioned at top right */
-.section-header .section-title {
-    align-self: flex-start !important;
-    margin-left: auto !important;
-    margin-right: 0 !important;
-    text-align: right !important;
-    direction: rtl !important;
-}
-
-/* Additional specificity for RTL section titles */
-[dir="rtl"] .section-header .section-title,
-[dir="rtl"] .section-header h3.section-title {
-    text-align: right !important;
-    direction: rtl !important;
-    margin-left: auto !important;
-    margin-right: 0 !important;
-}
-
-/* Maximum specificity override for section titles */
-.home-content .section-header h3.section-title,
-.home-content[dir="rtl"] .section-header h3.section-title,
-ion-content.home-content .section-header h3.section-title,
-ion-content.home-content[dir="rtl"] .section-header h3.section-title {
-    text-align: right !important;
-    direction: rtl !important;
-    margin-left: auto !important;
-    margin-right: 0 !important;
-    align-self: flex-start !important;
-    justify-self: flex-end !important;
-}
 
 .view-all-btn {
-    --color: #8B4513;
+    --color: var(--primary);
     --background: transparent;
     font-size: 14px;
     font-weight: 500;
@@ -399,32 +352,12 @@ ion-content.home-content[dir="rtl"] .section-header h3.section-title {
         text-align: center;
     }
 
-    .section-title {
-        text-align: right !important;
-        direction: rtl !important;
-        margin-left: auto !important;
-        margin-right: 0 !important;
-    }
-
     .welcome-title {
         text-align: center;
     }
 
     .welcome-subtitle {
         text-align: center;
-    }
-
-    .section-header {
-        flex-direction: row;
-        justify-content: flex-end !important;
-        align-items: flex-start !important;
-    }
-
-    .section-title {
-        text-align: right !important;
-        direction: rtl !important;
-        margin-left: auto !important;
-        margin-right: 0 !important;
     }
 
     .filter-dropdowns {
@@ -723,7 +656,7 @@ ion-content.home-content[dir="rtl"] .section-header h3.section-title {
 }
 
 .view-details-btn {
-    --background: #8B4513;
+    --background: var(--primary);
     --color: white;
     --border-radius: 8px;
     --padding-top: 12px;

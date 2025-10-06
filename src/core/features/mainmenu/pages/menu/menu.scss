@@ -7,6 +7,19 @@
 
     ion-tabs.placement-side {
         --menutabbar-size: var(--side-tabs-size);
+
+        ion-tab-bar {
+            --background: var(--core-side-tabs-background);
+            --color: var(--core-side-tabs-color);
+            --color-selected: var(--core-side-tabs-color-selected);
+            --background-selected: var(--core-side-tabs-background-selected);
+        }
+
+        ion-tab-button {
+            &:hover {
+                background: color-mix(in srgb, var(--primary) 12%, transparent);
+            }
+        }
     }
 
     --network-margin-bottom: 0px;
@@ -52,7 +65,7 @@
         overflow-x: auto;
         overflow-y: hidden;
         padding: 0 8px;
-        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 -2px 8px color-mix(in srgb, var(--primary) 15%, transparent);
         border-top: 1px solid var(--border-color, #e0e0e0);
         scroll-behavior: smooth;
         -webkit-overflow-scrolling: touch;
@@ -85,6 +98,7 @@ core-user-menu-button {
 
     ion-tab-button {
         color: var(--color);
+        --ripple-color: color-mix(in srgb, var(--primary) 60%, white);
         --padding-start: 8px;
         --padding-end: 8px;
         --padding-top: 8px;
@@ -101,14 +115,26 @@ core-user-menu-button {
         flex-shrink: 0;
 
         &:hover {
-            background: rgba(0, 0, 0, 0.05);
+            background: color-mix(in srgb, var(--primary) 12%, transparent);
+            box-shadow: 0 1px 3px color-mix(in srgb, var(--primary) 25%, transparent);
+        }
+
+        &.ion-activated,
+        &:active {
+            background: color-mix(in srgb, var(--primary) 18%, transparent);
+            box-shadow: 0 2px 6px color-mix(in srgb, var(--primary) 35%, transparent);
         }
 
         &.tab-selected {
             color: var(--color-selected);
             background: var(--background-selected);
             transform: scale(1.02);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 1px 3px color-mix(in srgb, var(--primary) 35%, transparent);
+        }
+
+        &:focus-visible {
+            outline: 2px solid color-mix(in srgb, var(--primary) 60%, white);
+            outline-offset: 2px;
         }
 
         ion-icon.core-tab-icon {

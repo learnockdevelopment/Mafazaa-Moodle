@@ -84,9 +84,9 @@
     overflow: hidden;
     animation: slideInFromCenter 0.3s ease-out;
     background: white;
-    --primary-color: #8B4513;
-    --primary-light: #A0522D;
-    --primary-dark: #654321;
+    --primary-color: var(--primary);
+    --primary-light: var(--primary);
+    --primary-dark: var(--primary);
     --text-primary: #000000;
     --text-secondary: #333333;
     --text-muted: #666666;

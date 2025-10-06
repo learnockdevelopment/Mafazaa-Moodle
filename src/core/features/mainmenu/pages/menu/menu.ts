@@ -18,6 +18,7 @@ import { BackButtonEvent } from '@ionic/core';
 import { Subscription } from 'rxjs';
 
 import { CoreEvents, CoreEventObserver } from '@singletons/events';
+import { CoreLang } from '@services/lang';
 import { CoreMainMenu } from '../../services/mainmenu';
 import { CoreMainMenuDelegate, CoreMainMenuHandlerToDisplay } from '../../services/mainmenu-delegate';
 import { Router } from '@singletons';
@@ -91,6 +92,7 @@ export default class CoreMainMenuPage implements OnInit, OnDestroy {
     moreBadge = false;
     visibility = 'hidden';
     loadingTabsLength = this.getLoadingTabsLength();
+    currentLang: string = 'en';
 
     protected subscription?: Subscription;
     protected navSubscription?: Subscription;
@@ -143,6 +145,19 @@ export default class CoreMainMenuPage implements OnInit, OnDestroy {
         this.showTabs = true;
 
         this.initAfterLoginNavigations();
+        // Detect current language for directionality and update on changes.
+        try {
+            this.currentLang = (await CoreLang.getCurrentLanguage()) || 'en';
+        } catch {
+            this.currentLang = 'en';
+        }
+        CoreEvents.on(CoreEvents.LANGUAGE_CHANGED, async () => {
+            try {
+                this.currentLang = (await CoreLang.getCurrentLanguage()) || this.currentLang;
+            } catch {
+                // ignore
+            }
+        });
 
         this.isMainScreen = !this.mainTabs().outlet?.canGoBack();
         this.updateVisibility();
