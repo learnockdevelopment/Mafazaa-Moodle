@@ -46,6 +46,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     protected logger = CoreLogger.getInstance('AppComponent');
     currentLang = 'en';
+    currentLang = 'en';
 
     private translate = inject(TranslateService);
 
@@ -72,10 +73,8 @@ export class AppComponent implements OnInit, AfterViewInit {
             }
         }, 500);
 
-        // Periodic language change detection
-        setInterval(() => {
-            this.loadCurrentLanguage();
-        }, 2000);
+        // Listen to language changes via events instead of polling
+        CoreEvents.on(CoreEvents.LANGUAGE_CHANGED, () => this.loadCurrentLanguage());
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const win = <any> window;
@@ -207,10 +206,12 @@ export class AppComponent implements OnInit, AfterViewInit {
             // Get current language from CoreLang
             const detectedLang = await CoreLang.getCurrentLanguage();
             this.currentLang = detectedLang || 'en'; // Default to English if undefined
+            this.currentLang = detectedLang || 'en'; // Default to English if undefined
 
             this.logger.debug(`Detected language: ${this.currentLang}`);
 
             // Set the language
+            this.translate.setDefaultLang('en'); // Default to English
             this.translate.setDefaultLang('en'); // Default to English
             this.translate.use(this.currentLang);
 
@@ -218,11 +219,14 @@ export class AppComponent implements OnInit, AfterViewInit {
             this.setLanguageDirection(this.currentLang);
 
             // Listen for language changes
-            CoreEvents.on(CoreEvents.LANGUAGE_CHANGED, () => {
-                this.loadCurrentLanguage();
-            });
+            // Already subscribed in ngOnInit
 
         } catch (error) {
+            this.logger.warn('Failed to detect language, using English as default:', error);
+            this.currentLang = 'en';
+            this.translate.setDefaultLang('en');
+            this.translate.use('en');
+            this.setLanguageDirection('en');
             this.logger.warn('Failed to detect language, using English as default:', error);
             this.currentLang = 'en';
             this.translate.setDefaultLang('en');
@@ -239,6 +243,7 @@ export class AppComponent implements OnInit, AfterViewInit {
             const newLang = await CoreLang.getCurrentLanguage();
             if (newLang !== this.currentLang) {
                 this.logger.debug(`Language changed from ${this.currentLang} to ${newLang}`);
+                this.currentLang = newLang || 'en';
                 this.currentLang = newLang || 'en';
                 this.setLanguageDirection(this.currentLang);
 
@@ -265,7 +270,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
         this.logger.debug(`Setting direction for language: ${lang}`);
 
-        // Simple language detection: Arabic = RTL, English = LTR
+        // Arabic = RTL, English = LTR (default)
         if (lang === 'ar') {
             // Arabic = RTL
             htmlElement.setAttribute('dir', 'rtl');
@@ -290,6 +295,13 @@ export class AppComponent implements OnInit, AfterViewInit {
             document.body.classList.add('ltr');
             document.body.setAttribute('dir', 'ltr');
             this.logger.debug('Default LTR layout set');
+            // Default to English LTR
+            htmlElement.setAttribute('dir', 'ltr');
+            htmlElement.setAttribute('lang', 'en');
+            document.body.classList.remove('rtl');
+            document.body.classList.add('ltr');
+            document.body.setAttribute('dir', 'ltr');
+            this.logger.debug('Default LTR layout set');
         }
 
         // Force a reflow to ensure changes take effect
@@ -299,25 +311,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     /**
      * Force RTL layout immediately
      */
-    private forceRTL(): void {
-        const htmlElement = document.documentElement;
-        const bodyElement = document.body;
-
-        // Force RTL attributes
-        htmlElement.setAttribute('dir', 'rtl');
-        htmlElement.setAttribute('lang', 'ar');
-
-        // Force body classes
-        bodyElement.classList.remove('ltr');
-        bodyElement.classList.add('rtl');
-        bodyElement.setAttribute('dir', 'rtl');
-
-        // Force CSS direction
-        htmlElement.style.direction = 'rtl';
-        bodyElement.style.direction = 'rtl';
-        bodyElement.style.textAlign = 'right';
-
-        this.logger.debug('RTL forced immediately');
-    }
+    private forceRTL(): void { /* no-op: handled by setLanguageDirection */ }
 
 }

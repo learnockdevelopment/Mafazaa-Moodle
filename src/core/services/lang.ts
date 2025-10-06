@@ -32,7 +32,7 @@ import { CoreSites } from './sites';
 @Injectable({ providedIn: 'root' })
 export class CoreLangProvider {
 
-    protected fallbackLanguage = 'ar'; // Always use English as fallback language since it contains all strings.
+    protected fallbackLanguage = 'en'; // Always use English as fallback language since it contains all strings.
     protected defaultLanguage = CoreConstants.CONFIG.default_lang || 'en'; // Lang to use if device lang not valid or is forced.
     protected currentLanguage?: string; // Save current language in a variable to speed up the get function.
     protected customStrings: CoreLanguageObject = {}; // Strings defined using the admin tool.
@@ -69,8 +69,8 @@ export class CoreLangProvider {
         let language: string;
 
         if (CorePlatform.isAutomated()) {
-            // Force current language to English when Behat is running.
-            language = 'ar';
+            // Force current language to English when automated tests are running.
+            language = 'en';
         } else {
             language = await this.getCurrentLanguage();
         }
@@ -223,8 +223,8 @@ export class CoreLangProvider {
      * @param locale Locale to load.
      */
     protected async loadDayJSLocale(locale: string): Promise<void> {
-        // Use british english when parent english is loaded.
-        locale = locale === 'ar' ? 'en-gb' : locale;
+        // Use British English variant when English is selected to ensure full locale coverage.
+        locale = locale === 'en' ? 'en-gb' : locale;
 
         try {
             await import('dayjs/locale/' + locale);
@@ -240,19 +240,19 @@ export class CoreLangProvider {
                 });
             }
         } catch {
-            if (locale === 'ar' || locale === 'en-gb') {
+            if (locale === 'en' || locale === 'en-gb') {
                 return;
             }
             const parentLang = await this.getParentLanguageForLang(locale);
             const parentLangUsingHyphen = locale.substring(0, locale.indexOf('-'));
 
-            if (parentLangUsingHyphen && (parentLang === 'ar' || parentLang === undefined)) {
+            if (parentLangUsingHyphen && (parentLang === 'en' || parentLang === undefined)) {
                 await this.loadDayJSLocale(parentLangUsingHyphen);
 
                 return;
             }
 
-            await this.loadDayJSLocale(parentLang ?? 'ar');
+            await this.loadDayJSLocale(parentLang ?? 'en');
         }
     }
 
