@@ -1310,7 +1310,19 @@ export class CoreCourseProvider {
         course: CoreCourseAnyCourseData | { id: number },
         navOptions?: CoreNavigationOptions,
     ): Promise<void> {
+        console.log('🎓 COURSE SERVICE: Opening course', {
+            courseId: course.id,
+            courseName: 'fullname' in course ? course.fullname : 'Unknown',
+            navOptions: navOptions,
+            timestamp: new Date().toISOString(),
+            source: 'CoreCourseProvider.openCourse'
+        });
+
         if (course.id === CoreSites.getCurrentSite()?.getSiteHomeId()) {
+            console.log('🏠 COURSE SERVICE: Opening site home instead of course', {
+                courseId: course.id,
+                reason: 'Course ID matches site home ID'
+            });
             // Open site home.
             await CoreNavigator.navigate(`/main/${MAIN_MENU_HOME_PAGE_NAME}/${CORE_SITEHOME_PAGE_NAME}`, navOptions);
 

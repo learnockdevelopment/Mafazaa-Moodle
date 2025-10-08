@@ -162,9 +162,36 @@ export class CoreCoursesCourseListItemComponent implements OnInit, OnDestroy, On
      * Open a course.
      */
     openCourse(): void {
+        console.log('🏠 HOME PAGE: Course opening initiated', {
+            courseId: this.course.id,
+            courseName: this.course.fullname || this.course.displayname,
+            isEnrolled: this.isEnrolled,
+            courseData: {
+                id: this.course.id,
+                fullname: this.course.fullname,
+                displayname: this.course.displayname,
+                shortname: this.course.shortname,
+                summary: this.course.summary?.substring(0, 100) + '...',
+                progress: this.course.progress,
+                format: this.course.format
+            },
+            timestamp: new Date().toISOString(),
+            source: 'home-page-course-list-item'
+        });
+
         if (this.isEnrolled) {
+            console.log('🏠 HOME PAGE: Opening enrolled course', {
+                courseId: this.course.id,
+                method: 'CoreCourseHelper.openCourse',
+                params: { isGuest: false }
+            });
             CoreCourseHelper.openCourse(this.course, { params: { isGuest: false } });
         } else {
+            console.log('🏠 HOME PAGE: Opening non-enrolled course (summary page)', {
+                courseId: this.course.id,
+                method: 'CoreNavigator.navigateToSitePath',
+                path: `/course/${this.course.id}/summary`
+            });
             CoreNavigator.navigateToSitePath(
                 `/course/${this.course.id}/summary`,
                 { params: { course: this.course } },

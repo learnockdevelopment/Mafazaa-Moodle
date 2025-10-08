@@ -987,10 +987,22 @@ export class CoreCourseHelperProvider {
      * @returns Promise resolved when done.
      */
     async getAndOpenCourse(courseId: number, params?: Params, siteId?: string): Promise<void> {
+        console.log('🔧 COURSE HELPER: getAndOpenCourse called', {
+            courseId: courseId,
+            params: params,
+            siteId: siteId,
+            timestamp: new Date().toISOString(),
+            source: 'CoreCourseHelper.getAndOpenCourse'
+        });
+
         siteId = siteId ?? CoreSites.getCurrentSiteId();
 
         // Do not navigate if the course is already being displayed.
         if (siteId === CoreSites.getCurrentSiteId() && CoreCourse.currentViewIsCourse(courseId)) {
+            console.log('🔧 COURSE HELPER: Course already displayed, selecting tab', {
+                courseId: courseId,
+                selectedTab: params?.selectedTab
+            });
             CoreCourse.selectCourseTab(params?.selectedTab, params);
 
             return;
@@ -1855,11 +1867,28 @@ export class CoreCourseHelperProvider {
         course: CoreCourseAnyCourseData | { id: number },
         navOptions?: CoreNavigationOptions & { siteId?: string },
     ): Promise<void> {
+        console.log('🔧 COURSE HELPER: openCourse called', {
+            courseId: course.id,
+            courseName: 'fullname' in course ? course.fullname : 'Unknown',
+            navOptions: navOptions,
+            timestamp: new Date().toISOString(),
+            source: 'CoreCourseHelper.openCourse'
+        });
+
         const siteId = navOptions?.siteId;
         if (!siteId || siteId == CoreSites.getCurrentSiteId()) {
+            console.log('🔧 COURSE HELPER: Opening course on current site', {
+                courseId: course.id,
+                method: 'CoreCourse.openCourse'
+            });
             // Current site, we can open the course.
             return CoreCourse.openCourse(course, navOptions);
         } else {
+            console.log('🔧 COURSE HELPER: Opening course on different site', {
+                courseId: course.id,
+                siteId: siteId,
+                method: 'CoreNavigator.navigateToSitePath'
+            });
             // We need to load the site first.
             navOptions = navOptions || {};
 

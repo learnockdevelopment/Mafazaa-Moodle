@@ -32,6 +32,7 @@ import { CoreOpener } from '@singletons/opener';
 import { BackButtonPriority } from '@/core/constants';
 import { CoreLang } from '@services/lang';
 import { CoreEvents } from '@singletons/events';
+import { CoreCourseHelper } from '@features/course/services/course-helper';
 
 register();
 
@@ -45,7 +46,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     readonly outlet = viewChild.required(IonRouterOutlet);
 
     protected logger = CoreLogger.getInstance('AppComponent');
-    currentLang = 'en';
     currentLang = 'en';
 
     private translate = inject(TranslateService);
@@ -75,6 +75,9 @@ export class AppComponent implements OnInit, AfterViewInit {
 
         // Listen to language changes via events instead of polling
         CoreEvents.on(CoreEvents.LANGUAGE_CHANGED, () => this.loadCurrentLanguage());
+
+        // Handle course context errors globally
+        this.setupCourseContextErrorHandling();
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const win = <any> window;
@@ -152,6 +155,83 @@ export class AppComponent implements OnInit, AfterViewInit {
 
         // @todo Pause Youtube videos in Android when app is put in background or screen is locked?
         // See: https://github.com/moodlehq/moodleapp/blob/ionic3/src/app/app.component.ts#L312
+    }
+
+    /**
+     * Setup global course context error handling
+     */
+    private setupCourseContextErrorHandling(): void {
+        // Override console.error to catch course context errors
+        const originalConsoleError = console.error;
+        console.error = (...args: any[]) => {
+            // Call original console.error
+            originalConsoleError.apply(console, args);
+
+            // Check if this is a course context error
+            const errorMessage = args.join(' ');
+            if (errorMessage.includes('Course or activity not accessible') ||
+                errorMessage.includes('course id:29') ||
+                errorMessage.includes('restrictedcontextexception')) {
+                this.logger.warn('Course context error detected:', errorMessage);
+                this.handleCourseContextError(errorMessage);
+            }
+        };
+    }
+
+    /**
+     * Handle course context error
+     */
+    private handleCourseContextError(errorMessage: string): void {
+        // Extract course ID from error message
+        const courseIdMatch = errorMessage.match(/course id:(\d+)/);
+        const courseId = courseIdMatch ? parseInt(courseIdMatch[1], 10) : 29; // Default to 29 if not found
+
+        this.logger.warn('Handling course context error for course:', courseId);
+
+        // Handle the specific course access error
+        this.handleCourseAccessError(courseId, 'Course or activity not accessible');
+    }
+
+    /**
+     * Extract course ID from error data
+     */
+    private extractCourseIdFromError(data: any): number | null {
+        // Try to extract course ID from various possible sources
+        if (data.courseId) return data.courseId;
+        if (data.courseid) return data.courseid;
+        if (data.contextInstanceId) return data.contextInstanceId;
+        if (data.message && data.message.includes('course id:')) {
+            const match = data.message.match(/course id:(\d+)/);
+            if (match) return parseInt(match[1], 10);
+        }
+        return null;
+    }
+
+    /**
+     * Handle course access errors
+     */
+    private async handleCourseAccessError(courseId: number, message: string): Promise<void> {
+        try {
+            // Check if user is enrolled in the course
+            const hasAccess = await CoreCourseHelper.userHasAccessToCourse(courseId);
+
+            if (!hasAccess) {
+                // Check for guest access
+                const guestInfo = await CoreCourseHelper.courseUsesGuestAccessInfo(courseId);
+
+                if (guestInfo.guestAccess) {
+                    // Try to enable guest access
+                    this.logger.debug('Attempting guest access for course:', courseId);
+                    return;
+                } else {
+                    // Show enrollment message
+                    this.logger.warn('User needs to enroll in course:', courseId);
+                    // You can add user notification here if needed
+                }
+            }
+        } catch (error) {
+            this.logger.error('Error handling course access:', error);
+        }
     }
 
     /**

@@ -371,21 +371,40 @@ export default class CoreCoursesMyPage implements OnInit, OnDestroy, AsyncDirect
     }
 
     /**
-     * Load courses for vertical cards
+     * Load courses for vertical cards - Only user enrolled courses
      */
     private async loadCourses(): Promise<void> {
         try {
-            // Get all courses with full details including contacts and images
-            const allCourses = await CoreCourses.getCoursesByField();
+            console.log('🏠 HOME PAGE: Loading user enrolled courses only');
+
+            // Get only user enrolled courses instead of all courses
+            const userCourses = await CoreCourses.getUserCourses();
+
+            console.log('🏠 HOME PAGE: User courses loaded', {
+                totalCourses: userCourses.length,
+                courses: userCourses.map(course => ({
+                    id: course.id,
+                    fullname: course.fullname,
+                    shortname: course.shortname
+                }))
+            });
 
             // Filter out non-course items like "Elassr Academy" and cast to proper type
-            const filteredCourses = allCourses.filter(course => {
+            const filteredCourses = userCourses.filter(course => {
                 // Filter out items that are not real courses
                 const courseName = course.fullname?.toLowerCase() || '';
                 return !courseName.includes('elassr academy') &&
                        !courseName.includes('academy') &&
                        course.id > 0; // Ensure it has a valid course ID
             }) as CoreCourseSearchedDataWithExtraInfoAndOptions[];
+
+            console.log('🏠 HOME PAGE: Filtered user courses', {
+                filteredCount: filteredCourses.length,
+                courses: filteredCourses.map(course => ({
+                    id: course.id,
+                    fullname: course.fullname
+                }))
+            });
 
             // Ensure course images are loaded
             await this.loadCourseImages(filteredCourses);
@@ -408,10 +427,15 @@ export default class CoreCoursesMyPage implements OnInit, OnDestroy, AsyncDirect
 
             this.coursesLoaded = true;
 
+            console.log('🏠 HOME PAGE: User courses display ready', {
+                displayCount: this.courses.length,
+                categories: this.availableCategories.length
+            });
+
             // Force change detection to ensure images are rendered
             this.cdRef.detectChanges();
         } catch (error) {
-            console.error('Error loading courses:', error);
+            console.error('🏠 HOME PAGE: Error loading user courses:', error);
             this.courses = [];
             this.allCourses = [];
             this.availableCategories = [];
@@ -423,6 +447,22 @@ export default class CoreCoursesMyPage implements OnInit, OnDestroy, AsyncDirect
      * Open course details
      */
     openCourse(course: CoreCourseSearchedDataWithExtraInfoAndOptions): void {
+        console.log('🏠 MY COURSES PAGE: Opening course', {
+            courseId: course.id,
+            courseName: course.fullname || course.displayname,
+            courseData: {
+                id: course.id,
+                fullname: course.fullname,
+                displayname: course.displayname,
+                shortname: course.shortname,
+                summary: course.summary?.substring(0, 100) + '...',
+                format: course.format,
+                category: course.categoryname
+            },
+            timestamp: new Date().toISOString(),
+            source: 'my-courses-page'
+        });
+
         // For now, try to open the course directly
         // The CoreCourseHelper will handle enrollment checking
         CoreCourseHelper.openCourse(course, { params: { isGuest: false } });

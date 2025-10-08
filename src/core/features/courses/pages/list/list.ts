@@ -157,6 +157,9 @@ export default class CoreCoursesListPage implements OnInit, OnDestroy {
 
         if (mode === 'my') {
             this.showOnlyEnrolled = true;
+            console.log('📚 COURSES LIST: Mode set to "my" - showing only enrolled courses');
+        } else {
+            console.log('📚 COURSES LIST: Mode set to', mode, '- showing all available courses');
         }
 
         this.searchEnabled = !CoreCourses.isSearchCoursesDisabledInSite();
@@ -200,10 +203,26 @@ export default class CoreCoursesListPage implements OnInit, OnDestroy {
         try {
             if (clearTheList) {
                 if (this.showOnlyEnrolled) {
+                    console.log('📚 COURSES LIST: Loading enrolled courses only');
                     this.loadedCourses = await CoreCourses.getUserCourses();
+                    console.log('📚 COURSES LIST: Enrolled courses loaded', {
+                        count: this.loadedCourses.length,
+                        courses: this.loadedCourses.map(course => ({
+                            id: course.id,
+                            fullname: course.fullname
+                        }))
+                    });
                 } else {
+                    console.log('📚 COURSES LIST: Loading all available courses');
                     const courses = await CoreCourses.getCoursesByField();
                     this.loadedCourses = courses.filter((course) => course.id != this.frontpageCourseId);
+                    console.log('📚 COURSES LIST: All courses loaded', {
+                        count: this.loadedCourses.length,
+                        courses: this.loadedCourses.map(course => ({
+                            id: course.id,
+                            fullname: course.fullname
+                        }))
+                    });
                 }
 
                 this.coursesLoaded = 0;
