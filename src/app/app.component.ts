@@ -12,10 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { AfterViewInit, Component, OnInit, viewChild, inject } from '@angular/core';
-import { IonRouterOutlet, IonicModule } from '@ionic/angular';
-import { BackButtonEvent } from '@ionic/core';
-import { TranslateService } from '@ngx-translate/core';
+import {
+    AfterViewInit,
+    Component,
+    OnInit,
+    viewChild,
+    inject
+} from '@angular/core';
+import {
+    IonRouterOutlet,
+    IonicModule
+} from '@ionic/angular';
+import {
+    BackButtonEvent
+} from '@ionic/core';
+import {
+    TranslateService
+} from '@ngx-translate/core';
 
 import { CoreLoginHelper } from '@features/login/services/login-helper';
 import { SplashScreen } from '@singletons';
@@ -57,7 +70,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     /**
      * @inheritdoc
      */
-    async ngOnInit(): Promise<void> {
+    async ngOnInit(): Promise < void > {
         // Detect language and set direction first
         await this.detectAndSetLanguage();
 
@@ -80,7 +93,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.setupCourseContextErrorHandling();
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const win = <any> window;
+        const win = < any > window;
 
         CorePlatform.resume.subscribe(() => {
             // Wait a second before setting it to false since in iOS there could be some frozen WS calls.
@@ -93,7 +106,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         });
 
         // "Expose" CoreWindow.open.
-        win.openWindowSafely = (url: string, name?: string): void => {
+        win.openWindowSafely = (url: string, name ? : string): void => {
             CoreWindow.open(url, name);
         };
 
@@ -140,8 +153,8 @@ export class AppComponent implements OnInit, AfterViewInit {
             }
             for (const mutation of mutations) {
                 if (mutation.target instanceof HTMLElement &&
-                        mutation.target.ariaHidden === 'true' &&
-                        mutation.target.contains(document.activeElement)) {
+                    mutation.target.ariaHidden === 'true' &&
+                    mutation.target.contains(document.activeElement)) {
                     document.activeElement.blur();
 
                     return;
@@ -254,7 +267,7 @@ export class AppComponent implements OnInit, AfterViewInit {
      *
      * @returns Promise resolved when done.
      */
-    protected async setSystemUIColorsAfterSplash(): Promise<void> {
+    protected async setSystemUIColorsAfterSplash(): Promise < void > {
         // When the app starts and the splash is hidden, the color of the bars changes from transparent to black.
         // We have to set the current color but we don't know when the change will be made.
         // This problem is only related to Android, so on iOS it will be only set once.
@@ -264,7 +277,7 @@ export class AppComponent implements OnInit, AfterViewInit {
             return;
         }
 
-        const promise = new CorePromisedValue<void>();
+        const promise = new CorePromisedValue < void > ();
 
         const interval = window.setInterval(() => {
             CoreApp.setSystemUIColors();
@@ -281,7 +294,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     /**
      * Detect language and set appropriate direction
      */
-    private async detectAndSetLanguage(): Promise<void> {
+    private async detectAndSetLanguage(): Promise < void > {
         try {
             // Get current language from CoreLang
             const detectedLang = await CoreLang.getCurrentLanguage();
@@ -318,7 +331,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     /**
      * Load current language
      */
-    private async loadCurrentLanguage(): Promise<void> {
+    private async loadCurrentLanguage(): Promise < void > {
         try {
             const newLang = await CoreLang.getCurrentLanguage();
             if (newLang !== this.currentLang) {
@@ -391,6 +404,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     /**
      * Force RTL layout immediately
      */
-    private forceRTL(): void { /* no-op: handled by setLanguageDirection */ }
+    private forceRTL(): void {
+        /* no-op: handled by setLanguageDirection */ }
 
 }
